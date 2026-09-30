@@ -140,8 +140,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="base.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TicTacToe\base.cpp" />
+    <ClCompile Include="Common\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
