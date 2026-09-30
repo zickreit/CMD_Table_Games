@@ -1,6 +1,6 @@
 // CMD Table Game - это проект об различных классических настольных играх, реализованных в консоли
 // Список доступных игр:
-//	1. Крестики-нолики -
+//	1. Крестики-нолики ...
 //	2. Шашки -
 //	3. Шахматы -
 
@@ -8,10 +8,16 @@
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #include <Windows.h>
+#include "TicTacToe/TicTacToeGame.h"
+#include "Common/ConsoleWindow.h"
 
 int main(int argc, char* argv[]) {
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
+
+	ConsoleWindow console(100, 20, L"Окно");
+
+	ticTacToe();
 }
 #else
 #include <cstdlib>
