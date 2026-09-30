@@ -24,6 +24,8 @@ hInput_(GetStdHandle(STD_INPUT_HANDLE)), hOutput_(GetStdHandle(STD_OUTPUT_HANDLE
 	changingConsoleProperties();
 }
 
+// Проверка значений параметров размера консольного окна (в символах)
+// Учитывается разрешение экрана и размер шрифта
 bool ConsoleWindow::isValidSize(int width, int height) {
 	if (width <= 0 || height <= 0) return false;
 
@@ -49,8 +51,8 @@ bool ConsoleWindow::isValidSize(int width, int height) {
 
 void ConsoleWindow::changingConsoleProperties() {
 	LONG style = GetWindowLong(hWnd_, GWL_STYLE);
-	style &= ~WS_THICKFRAME; // Отключает изменение размера окна
-	style &= ~WS_MAXIMIZEBOX; // Отключает кнопку разворачивания окна
+	style &= ~WS_THICKFRAME; // отключает изменение размера окна
+	style &= ~WS_MAXIMIZEBOX; // отключает кнопку разворачивания окна
 	SetWindowLong(hWnd_, GWL_STYLE, style);
 	SetWindowPos(hWnd_, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
@@ -61,12 +63,12 @@ void ConsoleWindow::changingConsoleProperties() {
 	SetConsoleScreenBufferSize(hOutput_, bufferSize);
 
 	SMALL_RECT windowSize = { 0, 0, static_cast<SHORT>(width_ - 1), static_cast<SHORT>(height_ - 1) };
-	SetConsoleWindowInfo(hOutput_, TRUE, &windowSize); // Изменяет размер окна
+	SetConsoleWindowInfo(hOutput_, TRUE, &windowSize); // изменяет размер окна
 
 	DWORD mode;
 	GetConsoleMode(hInput_, &mode);
-	mode &= ~ENABLE_QUICK_EDIT_MODE; // Отключает выделение
-	mode |= ENABLE_MOUSE_INPUT; // Включает отслеживание мыши
+	mode &= ~ENABLE_QUICK_EDIT_MODE; // отключает выделение
+	mode |= ENABLE_MOUSE_INPUT; // включает отслеживание мыши
 	SetConsoleMode(hInput_, mode);
 }
 

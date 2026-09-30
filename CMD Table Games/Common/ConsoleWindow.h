@@ -13,6 +13,7 @@ protected:
 	int height_{};
 	std::wstring title_;
 public:
+	// Размер консольного окна указывается в количестве символов консоли
 	ConsoleWindow(int width = 100, int height = 60, const std::wstring& title = L"Консольное окно");
 
 	bool isValidSize(int width, int height);
