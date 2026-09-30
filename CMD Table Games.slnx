@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CMD Table Games/CMD Table Games.vcxproj" Id="a920704d-9569-472c-8d9c-bd6a5ee94789" />
+</Solution>
