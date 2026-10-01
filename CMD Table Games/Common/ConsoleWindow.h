@@ -7,7 +7,7 @@
 class ConsoleWindow {
 private:
 	HANDLE hInput_;
-	HANDLE hOutput_ = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE hOutput_;
 	HWND hWnd_;
 	int width_{};
 	int height_{};
