@@ -55,11 +55,11 @@ void TicTacToe::drawUI() {
 	coutBuffer << "█▄▀ █▀█ █▀▀ █▀▀ ▀█▀ █ ▄█ █▄▀ █ ▄█  ▄▄  █ █ █▀█  █▀█ █ ▄█ █▄▀ █ ▄█" << '\n';
 	coutBuffer << "█ █ █▀▀ ██▄ █▄▄  █  █▀ █ █ █ █▀ █      █▀█ █▄█ ▄█ █ █▀ █ █ █ █▀ █" << '\n';
 	coutBuffer << gridSize_ * gridSizeHeightMultiplier_ << " | " << gridSize_ * gridSizeWidthMultiplier_ << '\n';
-	coutBuffer << getGridUI(0, 3);
+	coutBuffer << getEmptyGridUI(0, 3);
 	std::cout << coutBuffer.str();
 }
 
-std::string TicTacToe::getGridUI(int xOffset, int yOffset) {
+std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 	//CONSOLE_SCREEN_BUFFER_INFO csbi;
 	//GetConsoleScreenBufferInfo(getHandleOutput(), &csbi);
 	std::string gridBufferStr;
@@ -116,7 +116,8 @@ std::string TicTacToe::getGridUI(int xOffset, int yOffset) {
 						gameGridCoords_.at(cellCount++).Bottom = (gridSizeHeightMultiplier_ + 1) * cellRow;
 						isEndCell = false;
 					}
-					gridBufferStr += " ";
+
+						gridBufferStr += " ";
 				}
 				gridBufferStr += k >= gridSize_ ? "" : "│";
 			}
@@ -146,7 +147,9 @@ void TicTacToe::mouseEventWaiting() {
 			SHORT y = mer.dwMousePosition.Y;
 			if (isMouseOnCell(x, y))
 			{
-				std::cout << "\n\rна клетке: " << getCell(x, y) + 1 << " | " << x << ", " << y;
+				int cellId = getCell(x, y);
+				setCell(CellStatus::focus, cellId);
+				std::cout << "\n\rна клетке: " << + 1 << " | " << x << ", " << y;
 			}
 			else
 			{
@@ -180,6 +183,12 @@ int TicTacToe::getCell(SHORT x, SHORT y) {
 	}
 	return -1;
 }
+
+void TicTacToe::setCell(CellStatus cs, int id) {
+	if (id < 0 || id >= gameGridStats_.size()) return;
+	gameGridStats_.at(id) = cs;
+}
+
 
 void ticTacToe() {
 	TicTacToe game;

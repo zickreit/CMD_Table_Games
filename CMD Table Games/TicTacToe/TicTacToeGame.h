@@ -8,6 +8,7 @@ class TicTacToe : public ConsoleWindow {
 private:
 	enum class CellStatus {
 		empty,
+		focus,
 		cross,
 		zero
 	};
@@ -23,9 +24,10 @@ public:
 	void startRound();
 
 	void drawUI();
-	std::string getGridUI(int xOffset, int yOffset);
+	std::string getEmptyGridUI(int xOffset, int yOffset);
 
 	int getCell(SHORT x, SHORT y);
+	void setCell(CellStatus cs, int id);
 
 	void mouseEventWaiting();
 	bool isMouseOnCell(short x, short y);
