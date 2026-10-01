@@ -5,7 +5,7 @@
 #include <exception>
 
 class ConsoleWindow {
-protected:
+private:
 	HANDLE hInput_;
 	HANDLE hOutput_ = GetStdHandle(STD_OUTPUT_HANDLE);
 	HWND hWnd_;
@@ -21,4 +21,7 @@ public:
 	void changingConsoleProperties();
 
 	void clearScreen();
+
+	int getConsoleWidth() { return width_; }
+	int getConsoleHeight() { return height_; }
 };

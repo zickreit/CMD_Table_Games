@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include <Windows.h>
 #include "Common/ConsoleWindow.h"
 
@@ -11,15 +12,19 @@ private:
 		zero
 	};
 private:
-	std::vector<std::vector<CellStatus>> gameGridStats_;
-	std::vector<std::vector<COORD>> gameGridCoords_;
-	int gameGridSize_{};
+	std::vector<CellStatus> gameGridStats_;
+	std::vector<RECT> gameGridCoords_;
+	int gridSize_{};
+	int gridSizeWidthMultiplier_{};
+	int gridSizeHeightMultiplier_{};
 public:
 	TicTacToe(int gameGridSize = 3);
 
 	void startRound();
 
-	void drawInterface();
+	void drawUI();
+
+	std::string getGridUI();
 };
 
 void ticTacToe();
