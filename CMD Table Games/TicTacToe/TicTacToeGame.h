@@ -13,7 +13,7 @@ private:
 	};
 private:
 	std::vector<CellStatus> gameGridStats_;
-	std::vector<RECT> gameGridCoords_;
+	std::vector<SMALL_RECT> gameGridCoords_;
 	int gridSize_{};
 	int gridSizeWidthMultiplier_{};
 	int gridSizeHeightMultiplier_{};

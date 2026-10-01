@@ -89,19 +89,17 @@ std::string TicTacToe::getGridUI() {
 				if ((i - 1) % gridSizeHeightMultiplier_ == 0)
 				{
 					isBeginCell = true;
-					++cellCount;
 				}
 				else if ((i + 1) % gridSizeHeightMultiplier_ == 0)
 				{
 					isEndCell = true;
-					++cellCount;
 				}
 				for (int j = 1; j <= gridSizeWidthMultiplier_; ++j)
 				{
 					if (j == 1 && isBeginCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at()
+						gameGridCoords_.at(cellCount++);
 						isBeginCell = false;
 					}
 					else if (j == gridSizeWidthMultiplier_ && isEndCell) {
