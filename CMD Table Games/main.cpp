@@ -15,8 +15,6 @@ int main(int argc, char* argv[]) {
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	ConsoleWindow console(100, 20, L"Окно");
-
 	ticTacToe();
 }
 #else
