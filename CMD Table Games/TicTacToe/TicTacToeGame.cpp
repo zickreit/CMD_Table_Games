@@ -32,7 +32,7 @@
 TicTacToe::TicTacToe(int gameGridSize)
 	: ConsoleWindow::ConsoleWindow(65, 40, L"Крестики-Нолики") {
 	gridSize_ = std::clamp(gameGridSize, 3, 10);
-	gameGridCoords_.assign((size_t)std::pow(gridSize_, gridSize_), {0, 0});
+	gameGridCoords_.assign((size_t)std::pow(gridSize_, gridSize_), {0, 0, 0, 0});
 	gameGridStats_.assign((size_t)std::pow(gridSize_, gridSize_), CellStatus(CellStatus::empty));
 	gridSizeWidthMultiplier_ = (getConsoleWidth() - gridSize_) / gridSize_;
 	gridSizeHeightMultiplier_ = (getConsoleHeight() - 10) / gridSize_;
@@ -60,6 +60,8 @@ void TicTacToe::drawUI() {
 }
 
 std::string TicTacToe::getGridUI() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(getHandleOutput(), &csbi);
 	std::string gridBufferStr;
 	int cellCount{};
 	bool isBeginCell = false;
@@ -99,11 +101,15 @@ std::string TicTacToe::getGridUI() {
 					if (j == 1 && isBeginCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount++);
+						gameGridCoords_.at(cellCount++).Left = 1;
+						gameGridCoords_.at(cellCount++).Top = 1;
 						isBeginCell = false;
 					}
 					else if (j == gridSizeWidthMultiplier_ && isEndCell) {
 						//gridBufferStr += std::to_string(cellCount);
+						gameGridCoords_.at(cellCount++).Right = gridSizeWidthMultiplier_;
+						gameGridCoords_.at(cellCount++).Bottom = gridSizeHeightMultiplier_;
+
 						isEndCell = false;
 					}
 					gridBufferStr += " ";
