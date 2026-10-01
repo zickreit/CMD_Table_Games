@@ -10,7 +10,7 @@
 //	- функциональная игровая сетка						|
 //	   * хранить информацию об статусе каждой ячейки	| +-
 //     * хранить информацию об координатах ячеек		| +
-//	   * взаимодействие через нажатие мышки				|
+//	   * взаимодействие через нажатие мышки				| +-
 //  - выбор соперника									|
 //	   * соперник второй игрок							|
 //	   * соперник бот									|
@@ -41,6 +41,7 @@ TicTacToe::TicTacToe(int gameGridSize)
 void TicTacToe::startRound() {
 	static std::string hideCursor = "\033[?25l\n";
 	std::cout << hideCursor;
+	stepCount_ = 1;
 	for (;;)
 	{
 		clearScreen();
@@ -70,7 +71,6 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 	bool isEndCell = false;
 	for (int i = 1; i <= gridSize_ * gridSizeHeightMultiplier_; ++i)
 	{
-
 		if (i % gridSizeHeightMultiplier_ == 0 && i < gridSize_ * gridSizeHeightMultiplier_)
 		{
 			for (int k = 1; k <= gridSize_; ++k)
@@ -110,14 +110,29 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 						gameGridCoords_.at(cellCount++).Top = yOffset + gridSizeHeightMultiplier_ * (cellRow - 1);
 						isBeginCell = false;
 					}
-					else if (j == gridSizeWidthMultiplier_ && isEndCell) {
+					else if (j == gridSizeWidthMultiplier_ && isEndCell)
+					{
 						//gridBufferStr += std::to_string(cellCount);
 						gameGridCoords_.at(cellCount).Right = (gridSizeWidthMultiplier_ - 1) * cellCol++;
 						gameGridCoords_.at(cellCount++).Bottom = (gridSizeHeightMultiplier_ + 1) * cellRow;
 						isEndCell = false;
 					}
-
+					if (gameGridStats_.at(cellCount == 0 ? 0 : cellCount - 1) == CellStatus::empty)
+					{
 						gridBufferStr += " ";
+					}
+					else if(gameGridStats_.at(cellCount == 0 ? 0 : cellCount - 1) == CellStatus::focus)
+					{
+						if (stepCount_ % 2 != 0)
+						{
+							gridBufferStr += "X";
+						}
+						else
+						{
+							gridBufferStr += "O";
+						}
+					}
+					
 				}
 				gridBufferStr += k >= gridSize_ ? "" : "│";
 			}
@@ -149,7 +164,7 @@ void TicTacToe::mouseEventWaiting() {
 			{
 				int cellId = getCell(x, y);
 				setCell(CellStatus::focus, cellId);
-				std::cout << "\n\rна клетке: " << + 1 << " | " << x << ", " << y;
+				std::cout << "\n\rна клетке: " << cellId + 1 << " | " << x << ", " << y;
 			}
 			else
 			{
@@ -191,6 +206,6 @@ void TicTacToe::setCell(CellStatus cs, int id) {
 
 
 void ticTacToe() {
-	TicTacToe game;
+	TicTacToe game(3);
 	game.startRound();
 }

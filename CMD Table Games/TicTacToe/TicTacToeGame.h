@@ -18,6 +18,7 @@ private:
 	int gridSize_{};
 	int gridSizeWidthMultiplier_{};
 	int gridSizeHeightMultiplier_{};
+	int stepCount_{};
 public:
 	TicTacToe(int gameGridSize = 3);
 
@@ -25,6 +26,7 @@ public:
 
 	void drawUI();
 	std::string getEmptyGridUI(int xOffset, int yOffset);
+	//std::string getFilledCellsUI()
 
 	int getCell(SHORT x, SHORT y);
 	void setCell(CellStatus cs, int id);
