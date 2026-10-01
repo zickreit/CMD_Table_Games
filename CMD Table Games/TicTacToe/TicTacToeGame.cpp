@@ -64,6 +64,8 @@ std::string TicTacToe::getGridUI(int xOffset, int yOffset) {
 	//GetConsoleScreenBufferInfo(getHandleOutput(), &csbi);
 	std::string gridBufferStr;
 	int cellCount{};
+	int cellCol {1};
+	int cellRow {1};
 	bool isBeginCell = false;
 	bool isEndCell = false;
 	for (int i = 1; i <= gridSize_ * gridSizeHeightMultiplier_; ++i)
@@ -79,6 +81,8 @@ std::string TicTacToe::getGridUI(int xOffset, int yOffset) {
 				}
 				gridBufferStr += k == gridSize_ ? "" : "┼";
 			}
+			++cellRow;
+			cellCol = 1;
 		}
 		else
 		{
@@ -101,19 +105,20 @@ std::string TicTacToe::getGridUI(int xOffset, int yOffset) {
 					if (j == 1 && isBeginCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Left = 1;
-						gameGridCoords_.at(cellCount++).Top = 1;
+						gameGridCoords_.at(cellCount).Left = xOffset + gridSizeWidthMultiplier_ * (cellCol - 1);
+						gameGridCoords_.at(cellCount++).Top = yOffset + gridSizeHeightMultiplier_ * (cellRow - 1);
 						isBeginCell = false;
 					}
 					else if (j == gridSizeWidthMultiplier_ && isEndCell) {
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Right = gridSizeWidthMultiplier_;
-						gameGridCoords_.at(cellCount++).Bottom = gridSizeHeightMultiplier_;
+						gameGridCoords_.at(cellCount).Right = (gridSizeWidthMultiplier_ - 1) * cellCol;
+						gameGridCoords_.at(cellCount++).Bottom = (gridSizeHeightMultiplier_ + 1) * cellRow;
 						isEndCell = false;
 					}
 					gridBufferStr += " ";
 				}
 				gridBufferStr += k >= gridSize_ ? "" : "│";
+				++cellCol;
 			}
 		}
 
