@@ -25,6 +25,8 @@ public:
 	void drawUI();
 
 	std::string getGridUI();
+
+	void mouseEventWaiting();
 };
 
 void ticTacToe();

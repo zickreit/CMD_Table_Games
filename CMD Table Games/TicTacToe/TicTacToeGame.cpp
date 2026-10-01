@@ -2,7 +2,7 @@
 // Цели реализации игры:
 //  - интерфейс игры
 //     * большое название игры							| +
-//     * игровая сетка									|
+//     * игровая сетка									| +
 //	   * счёт и раунд									|
 //     * чей ход										|
 //	   * кнопка выхода в меню							|
@@ -46,7 +46,7 @@ void TicTacToe::startRound() {
 		//clearScreen();
 		system("cls");
 		drawUI();
-		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+		mouseEventWaiting();
 	}
 }
 
@@ -121,6 +121,27 @@ std::string TicTacToe::getGridUI() {
 		gridBufferStr += '\n';
 	}
 	return gridBufferStr;
+}
+
+void TicTacToe::mouseEventWaiting() {
+	INPUT_RECORD inputBufferRecord;
+	DWORD numRead;
+	DWORD numEvents;
+
+	for (;;)
+	{
+		GetNumberOfConsoleInputEvents(getHandleInput(), &numEvents);
+		if (numEvents == 0) continue;
+
+		ReadConsoleInput(getHandleInput(), &inputBufferRecord, 1, &numRead);
+		if (inputBufferRecord.EventType == MOUSE_EVENT)
+		{
+			MOUSE_EVENT_RECORD mer = inputBufferRecord.Event.MouseEvent;
+			short x = mer.dwMousePosition.X;
+			short y = mer.dwMousePosition.Y;
+
+		}
+	}
 }
 
 void ticTacToe() {
