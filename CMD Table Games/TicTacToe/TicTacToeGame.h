@@ -25,6 +25,8 @@ public:
 	void drawUI();
 	std::string getGridUI(int xOffset, int yOffset);
 
+	int getCell(SHORT x, SHORT y);
+
 	void mouseEventWaiting();
 	bool isMouseOnCell(short x, short y);
 };

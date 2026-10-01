@@ -9,7 +9,7 @@
 //	   * кнопка выбора сложности						|
 //	- функциональная игровая сетка						|
 //	   * хранить информацию об статусе каждой ячейки	| +-
-//     * хранить информацию об координатах ячеек		| +-
+//     * хранить информацию об координатах ячеек		| +
 //	   * взаимодействие через нажатие мышки				|
 //  - выбор соперника									|
 //	   * соперник второй игрок							|
@@ -89,6 +89,7 @@ std::string TicTacToe::getGridUI(int xOffset, int yOffset) {
 			if ((i + 1) % gridSizeHeightMultiplier_ == 0)
 			{
 				cellCount -= gridSize_;
+				cellCol -= gridSize_;
 			}
 			for (int k = 1; k <= gridSize_; ++k)
 			{
@@ -105,20 +106,19 @@ std::string TicTacToe::getGridUI(int xOffset, int yOffset) {
 					if (j == 1 && isBeginCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Left = xOffset + gridSizeWidthMultiplier_ * (cellCol - 1);
+						gameGridCoords_.at(cellCount).Left = xOffset + gridSizeWidthMultiplier_ * (cellCol++ - 1);
 						gameGridCoords_.at(cellCount++).Top = yOffset + gridSizeHeightMultiplier_ * (cellRow - 1);
 						isBeginCell = false;
 					}
 					else if (j == gridSizeWidthMultiplier_ && isEndCell) {
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Right = (gridSizeWidthMultiplier_ - 1) * cellCol;
+						gameGridCoords_.at(cellCount).Right = (gridSizeWidthMultiplier_ - 1) * cellCol++;
 						gameGridCoords_.at(cellCount++).Bottom = (gridSizeHeightMultiplier_ + 1) * cellRow;
 						isEndCell = false;
 					}
 					gridBufferStr += " ";
 				}
 				gridBufferStr += k >= gridSize_ ? "" : "│";
-				++cellCol;
 			}
 		}
 
@@ -146,11 +146,11 @@ void TicTacToe::mouseEventWaiting() {
 			SHORT y = mer.dwMousePosition.Y;
 			if (isMouseOnCell(x, y))
 			{
-				std::cout << "\n\rна клетке " << x << " | " << y;
+				std::cout << "\n\rна клетке: " << getCell(x, y) + 1 << " | " << x << ", " << y;
 			}
 			else
 			{
-				std::cout << "\n\rне на клетке " << x << " | " << y;
+				std::cout << "\n\rне на клетке " << x << ", " << y;
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			break;
@@ -168,6 +168,17 @@ bool TicTacToe::isMouseOnCell(SHORT x, SHORT y) {
 		}
 	}
 	return false;
+}
+
+int TicTacToe::getCell(SHORT x, SHORT y) {
+	for (int i{}; i < gameGridCoords_.size(); ++i)
+	{
+		if (x >= gameGridCoords_.at(i).Left && y >= gameGridCoords_.at(i).Top && x <= gameGridCoords_.at(i).Right && y <= gameGridCoords_.at(i).Bottom)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 void ticTacToe() {
