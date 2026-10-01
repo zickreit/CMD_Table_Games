@@ -23,10 +23,10 @@ public:
 	void startRound();
 
 	void drawUI();
-
-	std::string getGridUI();
+	std::string getGridUI(int xOffset, int yOffset);
 
 	void mouseEventWaiting();
+	bool isMouseOnCell(short x, short y);
 };
 
 void ticTacToe();
