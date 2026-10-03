@@ -66,6 +66,7 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 	//GetConsoleScreenBufferInfo(getHandleOutput(), &csbi);
 	std::string gridBufferStr;
 	int cellCount{};
+	int accurateCellCount{};
 	int cellCol {1};
 	int cellRow {1};
 	bool isBeginCell = false;
@@ -83,6 +84,7 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 				gridBufferStr += k == gridSize_ ? "" : "┼";
 			}
 			++cellRow;
+			accurateCellCount += gridSize_;
 			cellCol = 1;
 		}
 		else
@@ -121,11 +123,11 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 
 						isEndCell = false;
 					}
-					if (gameGridStats_.at(cellCount == 0 ? 0 : cellCount - 1) == CellStatus::empty)
+					if (gameGridStats_.at(accurateCellCount) == CellStatus::empty)
 					{
 						gridBufferStr += " ";
 					}
-					else if(gameGridStats_.at(cellCount == 0 ? 0 : cellCount - 1) == CellStatus::focus)
+					else if(gameGridStats_.at(accurateCellCount) == CellStatus::focus)
 					{
 						if (stepCount_ % 2 != 0)
 						{
@@ -136,12 +138,12 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 							gridBufferStr += "O";
 						}
 					}
-					
 				}
 				gridBufferStr += k >= gridSize_ ? "" : "│";
+				accurateCellCount += k >= gridSize_ ? 0 : 1;
 			}
+			accurateCellCount -= (gridSize_ - 1);
 		}
-
 		gridBufferStr += '\n';
 	}
 	return gridBufferStr;
@@ -176,15 +178,20 @@ void TicTacToe::mouseEventWaiting() {
 					setCell(CellStatus::focus, focusedCellId_);
 				}
 				std::cout << "\n\rна клетке: " << focusedCellId_ + 1 << " | " << x << ", " << y;
+				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			else
 			{
+				if (focusedCellId_ != -1)
+				{
+					setCell(CellStatus::empty, focusedCellId_);
+				}
 				std::cout << "\n\rне на клетке " << x << ", " << y;
+				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			break;
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 }
 
