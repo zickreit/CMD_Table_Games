@@ -73,6 +73,65 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 	bool isEndCell = false;
 	for (int i = 1; i <= gridSize_ * gridSizeHeightMultiplier_; ++i)
 	{
+		if ((i + 1) % gridSizeHeightMultiplier_ == 0)
+		{
+			++charRowCount;
+			cellCount -= gridSize_;
+		}
+		for (int k = 1; k <= gridSize_; ++k)
+		{
+			if ((i - 1) % gridSizeHeightMultiplier_ == 0)
+			{
+				isBeginCell = true;
+			}
+			else if ((i + 1) % gridSizeHeightMultiplier_ == 0)
+			{
+				isEndCell = true;
+			}
+			for (int j = 1; j <= gridSizeWidthMultiplier_; ++j)
+			{
+				if (j == 1 && isBeginCell)
+				{
+					//gridBufferStr += std::to_string(cellCount);
+					gameGridCoords_.at(cellCount).Left = xOffset + charColCount;
+					gameGridCoords_.at(cellCount).Top = yOffset + charRowCount;
+					++cellCount;
+					isBeginCell = false;
+				}
+				else if (j == gridSizeWidthMultiplier_ && isEndCell)
+				{
+					//gridBufferStr += std::to_string(cellCount);
+					gameGridCoords_.at(cellCount).Right = xOffset + charColCount;
+					gameGridCoords_.at(cellCount).Bottom = yOffset + charRowCount;
+					++cellCount;
+					isEndCell = false;
+				}
+				if (gameGridStats_.at(accurateCellCount) == CellStatus::empty)
+				{
+					gridBufferStr += " ";
+				}
+				else if(gameGridStats_.at(accurateCellCount) == CellStatus::focus)
+				{
+					if (stepCount_ % 2 != 0)
+					{
+						gridBufferStr += "X";
+					}
+					else
+					{
+						gridBufferStr += "O";
+					}
+				}
+				++charColCount;
+			}
+			gridBufferStr += k >= gridSize_ ? "" : "│";
+			accurateCellCount += k >= gridSize_ ? 0 : 1;
+			++charColCount;
+		}
+		accurateCellCount -= (gridSize_ - 1);
+		charColCount = 0;
+		gridBufferStr += '\n';
+		++charRowCount;
+
 		if (i % gridSizeHeightMultiplier_ == 0 && i < gridSize_ * gridSizeHeightMultiplier_)
 		{
 			for (int k = 1; k <= gridSize_; ++k)
@@ -84,67 +143,8 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 				gridBufferStr += k == gridSize_ ? "" : "┼";
 			}
 			accurateCellCount += gridSize_;
+			gridBufferStr += '\n';
 		}
-		else
-		{
-			if ((i + 1) % gridSizeHeightMultiplier_ == 0)
-			{
-				cellCount -= gridSize_;
-			}
-			for (int k = 1; k <= gridSize_; ++k)
-			{
-				if ((i - 1) % gridSizeHeightMultiplier_ == 0)
-				{
-					isBeginCell = true;
-				}
-				else if ((i + 1) % gridSizeHeightMultiplier_ == 0)
-				{
-					isEndCell = true;
-				}
-				for (int j = 1; j <= gridSizeWidthMultiplier_; ++j)
-				{
-					if (j == 1 && isBeginCell)
-					{
-						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Left = xOffset + charColCount;
-						gameGridCoords_.at(cellCount).Top = yOffset + charRowCount;
-						++cellCount;
-						isBeginCell = false;
-					}
-					else if (j == gridSizeWidthMultiplier_ && isEndCell)
-					{
-						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Right = xOffset + charColCount;
-						gameGridCoords_.at(cellCount).Bottom = yOffset + charRowCount;
-						++cellCount;
-						isEndCell = false;
-					}
-					if (gameGridStats_.at(accurateCellCount) == CellStatus::empty)
-					{
-						gridBufferStr += " ";
-					}
-					else if(gameGridStats_.at(accurateCellCount) == CellStatus::focus)
-					{
-						if (stepCount_ % 2 != 0)
-						{
-							gridBufferStr += "X";
-						}
-						else
-						{
-							gridBufferStr += "O";
-						}
-					}
-					++charColCount;
-				}
-				gridBufferStr += k >= gridSize_ ? "" : "│";
-				accurateCellCount += k >= gridSize_ ? 0 : 1;
-				++charColCount;
-			}
-			accurateCellCount -= (gridSize_ - 1);
-		}
-		charColCount = 0;
-		gridBufferStr += '\n';
-		++charRowCount;
 	}
 	return gridBufferStr;
 }
@@ -178,7 +178,7 @@ void TicTacToe::mouseEventWaiting() {
 					setCell(CellStatus::focus, focusedCellId_);
 				}
 				std::cout << "\n\rна клетке: " << focusedCellId_ + 1 << " | " << x << ", " << y;
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			else
 			{
@@ -187,7 +187,7 @@ void TicTacToe::mouseEventWaiting() {
 					setCell(CellStatus::empty, focusedCellId_);
 				}
 				std::cout << "\n\rне на клетке " << x << ", " << y;
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			break;
 		}
