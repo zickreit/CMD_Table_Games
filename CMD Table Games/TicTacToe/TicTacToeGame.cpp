@@ -26,6 +26,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <exception>
 #include "TicTacToeGame.h"
 #include "Common/ConsoleWindow.h"
 
@@ -106,15 +107,18 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 					if (j == 1 && isBeginCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Left = xOffset + gridSizeWidthMultiplier_ * (cellCol++ - 1);
-						gameGridCoords_.at(cellCount++).Top = yOffset + gridSizeHeightMultiplier_ * (cellRow - 1);
+						gameGridCoords_.at(cellCount).Left = xOffset + cellCol + gridSizeWidthMultiplier_ * (cellCol++ - 1);
+						gameGridCoords_.at(cellCount).Top = yOffset + gridSizeHeightMultiplier_ * (cellRow - 1);
+						++cellCount;
 						isBeginCell = false;
 					}
 					else if (j == gridSizeWidthMultiplier_ && isEndCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Right = (gridSizeWidthMultiplier_ - 1) * cellCol++;
-						gameGridCoords_.at(cellCount++).Bottom = (gridSizeHeightMultiplier_ + 1) * cellRow;
+						gameGridCoords_.at(cellCount).Right = (gridSizeWidthMultiplier_ - 1 + cellCol) * cellCol++;
+						gameGridCoords_.at(cellCount).Bottom = (gridSizeHeightMultiplier_ + 1) * cellRow;
+						++cellCount;
+
 						isEndCell = false;
 					}
 					if (gameGridStats_.at(cellCount == 0 ? 0 : cellCount - 1) == CellStatus::empty)
@@ -162,9 +166,16 @@ void TicTacToe::mouseEventWaiting() {
 			SHORT y = mer.dwMousePosition.Y;
 			if (isMouseOnCell(x, y))
 			{
-				int cellId = getCell(x, y);
-				setCell(CellStatus::focus, cellId);
-				std::cout << "\n\rна клетке: " << cellId + 1 << " | " << x << ", " << y;
+				if (focusedCellId_ != -1)
+				{
+					setCell(CellStatus::empty, focusedCellId_);
+				}
+				focusedCellId_ = getCell(x, y);
+				if(getCellStatus(focusedCellId_) == CellStatus::empty)
+				{
+					setCell(CellStatus::focus, focusedCellId_);
+				}
+				std::cout << "\n\rна клетке: " << focusedCellId_ + 1 << " | " << x << ", " << y;
 			}
 			else
 			{
@@ -198,6 +209,15 @@ int TicTacToe::getCell(SHORT x, SHORT y) {
 	}
 	return -1;
 }
+
+TicTacToe::CellStatus TicTacToe::getCellStatus(int id) {
+	if (id < 0 || id >= gameGridStats_.size())
+	{
+		throw std::runtime_error("Критическая ошибка: Неверный ID в вызове getCellStatus!\n");
+	}
+	return gameGridStats_.at(id); 
+}
+
 
 void TicTacToe::setCell(CellStatus cs, int id) {
 	if (id < 0 || id >= gameGridStats_.size()) return;

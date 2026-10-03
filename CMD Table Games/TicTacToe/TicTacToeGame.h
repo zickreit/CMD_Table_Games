@@ -30,6 +30,7 @@ public:
 	//std::string getFilledCellsUI()
 
 	int getCell(SHORT x, SHORT y);
+	CellStatus getCellStatus(int id);
 	void setCell(CellStatus cs, int id);
 
 	void mouseEventWaiting();
