@@ -67,8 +67,8 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 	std::string gridBufferStr;
 	int cellCount{};
 	int accurateCellCount{};
-	int cellCol {1};
-	int cellRow {1};
+	int charColCount{};
+	int charRowCount{};
 	bool isBeginCell = false;
 	bool isEndCell = false;
 	for (int i = 1; i <= gridSize_ * gridSizeHeightMultiplier_; ++i)
@@ -83,16 +83,13 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 				}
 				gridBufferStr += k == gridSize_ ? "" : "┼";
 			}
-			++cellRow;
 			accurateCellCount += gridSize_;
-			cellCol = 1;
 		}
 		else
 		{
 			if ((i + 1) % gridSizeHeightMultiplier_ == 0)
 			{
 				cellCount -= gridSize_;
-				cellCol -= gridSize_;
 			}
 			for (int k = 1; k <= gridSize_; ++k)
 			{
@@ -109,18 +106,17 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 					if (j == 1 && isBeginCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Left = xOffset + cellCol + gridSizeWidthMultiplier_ * (cellCol++ - 1);
-						gameGridCoords_.at(cellCount).Top = yOffset + gridSizeHeightMultiplier_ * (cellRow - 1);
+						gameGridCoords_.at(cellCount).Left = xOffset + charColCount;
+						gameGridCoords_.at(cellCount).Top = yOffset + charRowCount;
 						++cellCount;
 						isBeginCell = false;
 					}
 					else if (j == gridSizeWidthMultiplier_ && isEndCell)
 					{
 						//gridBufferStr += std::to_string(cellCount);
-						gameGridCoords_.at(cellCount).Right = (gridSizeWidthMultiplier_ - 1 + cellCol) * cellCol++;
-						gameGridCoords_.at(cellCount).Bottom = (gridSizeHeightMultiplier_ + 1) * cellRow;
+						gameGridCoords_.at(cellCount).Right = xOffset + charColCount;
+						gameGridCoords_.at(cellCount).Bottom = yOffset + charRowCount;
 						++cellCount;
-
 						isEndCell = false;
 					}
 					if (gameGridStats_.at(accurateCellCount) == CellStatus::empty)
@@ -138,13 +134,17 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 							gridBufferStr += "O";
 						}
 					}
+					++charColCount;
 				}
 				gridBufferStr += k >= gridSize_ ? "" : "│";
 				accurateCellCount += k >= gridSize_ ? 0 : 1;
+				++charColCount;
 			}
 			accurateCellCount -= (gridSize_ - 1);
 		}
+		charColCount = 0;
 		gridBufferStr += '\n';
+		++charRowCount;
 	}
 	return gridBufferStr;
 }
@@ -178,7 +178,7 @@ void TicTacToe::mouseEventWaiting() {
 					setCell(CellStatus::focus, focusedCellId_);
 				}
 				std::cout << "\n\rна клетке: " << focusedCellId_ + 1 << " | " << x << ", " << y;
-				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			else
 			{
@@ -187,7 +187,7 @@ void TicTacToe::mouseEventWaiting() {
 					setCell(CellStatus::empty, focusedCellId_);
 				}
 				std::cout << "\n\rне на клетке " << x << ", " << y;
-				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			break;
 		}
