@@ -19,6 +19,7 @@ private:
 	int gridSizeWidthMultiplier_{};
 	int gridSizeHeightMultiplier_{};
 	int stepCount_{};
+	int focusedCellId_ = -1;
 public:
 	TicTacToe(int gameGridSize = 3);
 
