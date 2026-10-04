@@ -51,7 +51,7 @@ bool ConsoleWindow::isValidSize(int width, int height) {
 
 void ConsoleWindow::changingConsoleProperties() {
 	LONG style = GetWindowLong(hWnd_, GWL_STYLE);
-	style &= ~WS_THICKFRAME; // отключает изменение размера окна
+	//style &= ~WS_THICKFRAME; // отключает изменение размера окна
 	style &= ~WS_MAXIMIZEBOX; // отключает кнопку разворачивания окна
 	SetWindowLong(hWnd_, GWL_STYLE, style);
 	SetWindowPos(hWnd_, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
@@ -83,4 +83,22 @@ void ConsoleWindow::clearScreen() {
 
 	FillConsoleOutputCharacter(hOutput_, (TCHAR)' ', dwConSize, coordScreen, &cCharsWritten);
 	SetConsoleCursorPosition(hOutput_, coordScreen);
+}
+
+int ConsoleWindow::getConsoleWidth() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	if (GetConsoleScreenBufferInfo(hOutput_, &csbi))
+	{
+		return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+	}
+	else return 0;
+}
+
+int ConsoleWindow::getConsoleHeight() {
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	if (GetConsoleScreenBufferInfo(hOutput_, &csbi))
+	{
+		return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+	}
+	else return 0;
 }

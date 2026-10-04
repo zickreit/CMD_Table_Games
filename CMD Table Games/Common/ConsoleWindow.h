@@ -25,6 +25,6 @@ public:
 	HANDLE& getHandleOutput() { return hOutput_; }
 	HANDLE& getHandleInput() { return hInput_; }
 
-	int getConsoleWidth() { return width_; }
-	int getConsoleHeight() { return height_; }
+	int getConsoleWidth();
+	int getConsoleHeight();
 };
