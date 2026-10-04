@@ -23,6 +23,7 @@
 #include <thread>
 #include <chrono>
 #include <algorithm>
+#include <ranges>
 #include <cmath>
 #include <string>
 #include <sstream>
@@ -32,11 +33,18 @@
 
 TicTacToe::TicTacToe(int gameGridSize)
 	: ConsoleWindow::ConsoleWindow(65, 40, L"Крестики-Нолики") {
-	gridSize_ = std::clamp(gameGridSize, 3, 10);
+	gridSize_ = std::clamp(gameGridSize, 3, getConsoleWidth() / 4);
 	gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), {0, 0, 0, 0});
 	gameGridStats_.assign((size_t)(gridSize_ * gridSize_), CellStatus(CellStatus::empty));
 	gridSizeWidthMultiplier_ = (getConsoleWidth() - gridSize_) / gridSize_;
-	gridSizeHeightMultiplier_ = (getConsoleHeight() - 10) / gridSize_;
+	gridSizeWidthMultiplier_ -= gridSizeWidthMultiplier_ % 2 != 0 ? 1 : 0;
+	//gridSizeHeightMultiplier_ = (getConsoleHeight() - 10) / gridSize_;
+	gridSizeHeightMultiplier_ = gridSizeWidthMultiplier_ / 2;
+	while (gridSize_ * gridSizeHeightMultiplier_ + (gridSize_ - 1) > getConsoleHeight())
+	{
+		--gridSizeHeightMultiplier_;
+		gridSizeWidthMultiplier_ -= 2;
+	}
 }
 
 void TicTacToe::startRound() {
@@ -53,17 +61,87 @@ void TicTacToe::startRound() {
 }
 
 void TicTacToe::drawUI() {
-	std::stringstream coutBuffer;
-	coutBuffer << "█▄▀ █▀█ █▀▀ █▀▀ ▀█▀ █ ▄█ █▄▀ █ ▄█  ▄▄  █ █ █▀█  █▀█ █ ▄█ █▄▀ █ ▄█" << '\n';
-	coutBuffer << "█ █ █▀▀ ██▄ █▄▄  █  █▀ █ █ █ █▀ █      █▀█ █▄█ ▄█ █ █▀ █ █ █ █▀ █" << '\n';
-	coutBuffer << gridSize_ * gridSizeHeightMultiplier_ << " | " << gridSize_ * gridSizeWidthMultiplier_ << '\n';
-	coutBuffer << getEmptyGridUI(0, 3);
-	std::cout << coutBuffer.str();
+	for(;;)
+	{
+		std::stringstream coutBuffer;
+		coutBuffer << "█▄▀ █▀█ █▀▀ █▀▀ ▀█▀ █ ▄█ █▄▀ █ ▄█  ▄▄  █ █ █▀█  █▀█ █ ▄█ █▄▀ █ ▄█" << '\n';
+		coutBuffer << "█ █ █▀▀ ██▄ █▄▄  █  █▀ █ █ █ █▀ █      █▀█ █▄█ ▄█ █ █▀ █ █ █ █▀ █" << '\n';
+		coutBuffer << '\n';
+		int existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
+		if (gridSize_ >= 10 || gridSizeHeightMultiplier_ <= 2)
+		{
+			int centeredSmallOffsetX = (getConsoleWidth() - (gridSize_ * 4 - 1)) / 2;
+			//int centeredSmallOffsetY = (getConsoleHeight() - (gridSize_ * 2 - 1)) / 2;
+			coutBuffer << getSmallGridUI(centeredSmallOffsetX, 1, existingLinesInBuffer);
+		}
+		else
+		{
+			int centeredBigOffsetX = (getConsoleWidth() - (gridSize_ * gridSizeWidthMultiplier_ + (gridSize_ - 1))) / 2;
+			//int centeredBigOffsetY = (getConsoleHeight() - (gridSize_ * gridSizeHeightMultiplier_ + (gridSize_ - 1))) / 2;
+			coutBuffer << getBigGridUI(centeredBigOffsetX, 1, existingLinesInBuffer);
+		}
+		existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
+		if (existingLinesInBuffer >= getConsoleHeight())
+		{
+			--gridSizeHeightMultiplier_;
+			gridSizeWidthMultiplier_ -= 2;
+		}
+		else
+		{
+			std::cout << coutBuffer.str();
+			break;
+		}
+	}
 }
 
-std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
-	//CONSOLE_SCREEN_BUFFER_INFO csbi;
-	//GetConsoleScreenBufferInfo(getHandleOutput(), &csbi);
+std::string TicTacToe::getSmallGridUI(int xOffset, int yOffset, int existingLinesNum) {
+	std::string gridBufferStr;
+	yOffset = (std::max)(yOffset, 0);
+	gridBufferStr += std::string(yOffset, '\n');
+	yOffset += existingLinesNum;
+	for (int i{}; i < gridSize_; ++i)
+	{
+		int cellCoordX = xOffset;
+		gridBufferStr += std::string(xOffset, ' ');
+		for (int k = i * gridSize_; k < (i + 1) * gridSize_; ++k)
+		{
+			gameGridCoords_.at(k).Left = cellCoordX;
+			gameGridCoords_.at(k).Top = i * 2 + yOffset;
+			gameGridCoords_.at(k).Right = cellCoordX + 2;
+			gameGridCoords_.at(k).Bottom = i * 2 + yOffset;
+			if (gameGridStats_.at(k) == CellStatus::empty)
+			{
+				gridBufferStr += "   ";
+			}
+			else if (gameGridStats_.at(k) == CellStatus::focus)
+			{
+				if (stepCount_ % 2 != 0)
+				{
+					gridBufferStr += " ╳ ";
+				}
+				else
+				{
+					gridBufferStr += " ◯ ";
+				}
+			}
+			gridBufferStr += (k == (i + 1) * gridSize_ - 1 ? "" : "│");
+			cellCoordX += 4;
+		}
+		gridBufferStr += "\n";
+		if (i == gridSize_ - 1) continue;
+		gridBufferStr += std::string(xOffset, ' ');
+		for (int j = i * gridSize_; j < (i + 1) * gridSize_; ++j)
+		{
+			gridBufferStr += "───";
+			gridBufferStr += (j == (i + 1) * gridSize_ - 1 ? "" : "┼");
+		}
+		gridBufferStr += "\n";
+	}
+	return gridBufferStr;
+}
+
+
+std::string TicTacToe::getBigGridUI(int xOffset, int yOffset, int existingLinesNum) {
 	std::string gridBufferStr;
 	int cellCount{};
 	int accurateCellCount{};
@@ -71,12 +149,17 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 	int charRowCount{};
 	bool isBeginCell = false;
 	bool isEndCell = false;
+	yOffset = (std::max)(yOffset, 0);
+	gridBufferStr += std::string(yOffset, '\n');
+	yOffset += existingLinesNum;
 	for (int i = 1; i <= gridSize_ * gridSizeHeightMultiplier_; ++i)
 	{
+		gridBufferStr += std::string(xOffset, ' ');
 		if ((i + 1) % gridSizeHeightMultiplier_ == 0)
 		{
 			++charRowCount;
 			cellCount -= gridSize_;
+			cellCount = std::clamp(cellCount, 0, gridSize_ * gridSize_);
 		}
 		for (int k = 1; k <= gridSize_; ++k)
 		{
@@ -134,6 +217,7 @@ std::string TicTacToe::getEmptyGridUI(int xOffset, int yOffset) {
 
 		if (i % gridSizeHeightMultiplier_ == 0 && i < gridSize_ * gridSizeHeightMultiplier_)
 		{
+			gridBufferStr += std::string(xOffset, ' ');
 			for (int k = 1; k <= gridSize_; ++k)
 			{
 				for (int j = 1; j <= gridSizeWidthMultiplier_; ++j)
@@ -177,7 +261,7 @@ void TicTacToe::mouseEventWaiting() {
 				{
 					setCell(CellStatus::focus, focusedCellId_);
 				}
-				std::cout << "\n\rна клетке: " << focusedCellId_ + 1 << " | " << x << ", " << y;
+				//std::cout << "\n\rна клетке: " << focusedCellId_ + 1 << " | " << x << ", " << y;
 				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			else
@@ -186,7 +270,7 @@ void TicTacToe::mouseEventWaiting() {
 				{
 					setCell(CellStatus::empty, focusedCellId_);
 				}
-				std::cout << "\n\rне на клетке " << x << ", " << y;
+				//std::cout << "\n\rне на клетке " << x << ", " << y;
 				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			break;

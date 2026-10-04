@@ -26,8 +26,9 @@ public:
 	void startRound();
 
 	void drawUI();
-	std::string getEmptyGridUI(int xOffset, int yOffset);
-	//std::string getFilledCellsUI()
+	std::string getSmallGridUI(int xOffset, int yOffset, int existingLinesNum);
+	std::string getBigGridUI(int xOffset, int yOffset, int existingLinesNum);
+	//std::string getFilledCellsUI();
 
 	int getCell(SHORT x, SHORT y);
 	CellStatus getCellStatus(int id);
