@@ -7,8 +7,9 @@
 //     * чей ход										|
 //	   * кнопка выхода в меню							|
 //	   * кнопка выбора сложности						|
+//	   * кнопка изменения размера поля					|
 //	- функциональная игровая сетка						|
-//	   * хранить информацию об статусе каждой ячейки	| +-
+//	   * хранить информацию об статусе каждой ячейки	| +
 //     * хранить информацию об координатах ячеек		| +
 //	   * взаимодействие через нажатие мышки				| +-
 //  - выбор соперника									|
@@ -64,9 +65,20 @@ void TicTacToe::drawUI() {
 	for(;;)
 	{
 		std::stringstream coutBuffer;
-		coutBuffer << "█▄▀ █▀█ █▀▀ █▀▀ ▀█▀ █ ▄█ █▄▀ █ ▄█  ▄▄  █ █ █▀█  █▀█ █ ▄█ █▄▀ █ ▄█" << '\n';
-		coutBuffer << "█ █ █▀▀ ██▄ █▄▄  █  █▀ █ █ █ █▀ █      █▀█ █▄█ ▄█ █ █▀ █ █ █ █▀ █" << '\n';
-		coutBuffer << '\n';
+		if(getConsoleWidth() >= 65)
+		{
+			coutBuffer << std::string((getConsoleWidth() - 65) / 2, ' ') << "█▄▀ █▀█ █▀▀ █▀▀ ▀█▀ █ ▄█ █▄▀ █ ▄█  ▄▄  █ █ █▀█  █▀█ █ ▄█ █▄▀ █ ▄█" << '\n';
+			coutBuffer << std::string((getConsoleWidth() - 65) / 2, ' ') << "█ █ █▀▀ ██▄ █▄▄  █  █▀ █ █ █ █▀ █      █▀█ █▄█ ▄█ █ █▀ █ █ █ █▀ █" << '\n';
+			coutBuffer << '\n';
+		}
+		else if (getConsoleWidth() >= 17)
+		{
+			coutBuffer << "Крестики - Нолики\n";
+		}
+		else if (getConsoleWidth() >= 8)
+		{
+			coutBuffer << "Крестики\nНолики\n";
+		}
 		int existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
 		if (gridSize_ >= 10 || gridSizeHeightMultiplier_ <= 2)
 		{
@@ -81,10 +93,16 @@ void TicTacToe::drawUI() {
 			coutBuffer << getBigGridUI(centeredBigOffsetX, 1, existingLinesInBuffer);
 		}
 		existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
-		if (existingLinesInBuffer >= getConsoleHeight())
+		if (existingLinesInBuffer >= getConsoleHeight() || gridSize_ * gridSizeWidthMultiplier_ + (gridSize_ - 1) >= getConsoleWidth())
 		{
 			--gridSizeHeightMultiplier_;
 			gridSizeWidthMultiplier_ -= 2;
+		}
+		else if (existingLinesInBuffer + gridSize_ * gridSizeHeightMultiplier_ + (gridSize_ - 1) < getConsoleHeight() 
+				 && gridSize_ * gridSizeWidthMultiplier_ + (gridSize_ - 1) < getConsoleWidth())
+		{
+			++gridSizeHeightMultiplier_;
+			gridSizeWidthMultiplier_ += 2;
 		}
 		else
 		{
@@ -97,6 +115,7 @@ void TicTacToe::drawUI() {
 std::string TicTacToe::getSmallGridUI(int xOffset, int yOffset, int existingLinesNum) {
 	std::string gridBufferStr;
 	yOffset = (std::max)(yOffset, 0);
+	xOffset = (std::max)(xOffset, 0);
 	gridBufferStr += std::string(yOffset, '\n');
 	yOffset += existingLinesNum;
 	for (int i{}; i < gridSize_; ++i)
@@ -150,6 +169,7 @@ std::string TicTacToe::getBigGridUI(int xOffset, int yOffset, int existingLinesN
 	bool isBeginCell = false;
 	bool isEndCell = false;
 	yOffset = (std::max)(yOffset, 0);
+	xOffset = (std::max)(xOffset, 0);
 	gridBufferStr += std::string(yOffset, '\n');
 	yOffset += existingLinesNum;
 	for (int i = 1; i <= gridSize_ * gridSizeHeightMultiplier_; ++i)
@@ -273,6 +293,10 @@ void TicTacToe::mouseEventWaiting() {
 				//std::cout << "\n\rне на клетке " << x << ", " << y;
 				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
+			break;
+		}
+		else if (inputBufferRecord.EventType == WINDOW_BUFFER_SIZE_EVENT)
+		{
 			break;
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));

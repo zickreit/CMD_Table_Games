@@ -51,7 +51,7 @@ bool ConsoleWindow::isValidSize(int width, int height) {
 
 void ConsoleWindow::changingConsoleProperties() {
 	LONG style = GetWindowLong(hWnd_, GWL_STYLE);
-	//style &= ~WS_THICKFRAME; // отключает изменение размера окна
+	style &= ~WS_THICKFRAME; // отключает изменение размера окна
 	style &= ~WS_MAXIMIZEBOX; // отключает кнопку разворачивания окна
 	SetWindowLong(hWnd_, GWL_STYLE, style);
 	SetWindowPos(hWnd_, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
@@ -69,6 +69,7 @@ void ConsoleWindow::changingConsoleProperties() {
 	GetConsoleMode(hInput_, &mode);
 	mode &= ~ENABLE_QUICK_EDIT_MODE; // отключает выделение
 	mode |= ENABLE_MOUSE_INPUT; // включает отслеживание мыши
+	mode |= ENABLE_WINDOW_INPUT; // включает отслеживание изменения размеров окна
 	SetConsoleMode(hInput_, mode);
 }
 
