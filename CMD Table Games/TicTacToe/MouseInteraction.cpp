@@ -22,26 +22,43 @@ void MouseInterction::mouseEventWaiting(TicTacToe& game) {
 			SHORT y = mer.dwMousePosition.Y;
 			if (isMouseOnCell(game, x, y))
 			{
-				if (game.focusedCellId_ != -1)
+				bool isMousePressed = mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED && mer.dwEventFlags == 0;
+				if (isMousePressed && 
+					(game.getCellStatus(game.getCell(x, y)) == TicTacToe::CellStatus::focus ||
+					game.getCellStatus(game.getCell(x, y)) == TicTacToe::CellStatus::empty))
 				{
-					game.setCell(TicTacToe::CellStatus::empty, game.focusedCellId_);
+					if (game.stepCount_ % 2 == 0)
+					{
+						game.setCell(TicTacToe::CellStatus::cross, game.getCell(x, y));
+						++game.stepCount_;
+					}
+					else
+					{
+						game.setCell(TicTacToe::CellStatus::zero, game.getCell(x, y));
+						++game.stepCount_;
+					}
 				}
-				game.focusedCellId_ = game.getCell(x, y);
-				if (game.getCellStatus(game.focusedCellId_) == TicTacToe::CellStatus::empty)
+				else
 				{
-					game.setCell(TicTacToe::CellStatus::focus, game.focusedCellId_);
+					if (game.focusedCellId_ != -1 && 
+						game.getCellStatus(game.focusedCellId_) == TicTacToe::CellStatus::focus)
+					{
+						game.setCell(TicTacToe::CellStatus::empty, game.focusedCellId_);
+					}
+					game.focusedCellId_ = game.getCell(x, y);
+					if (game.getCellStatus(game.focusedCellId_) == TicTacToe::CellStatus::empty)
+					{
+						game.setCell(TicTacToe::CellStatus::focus, game.focusedCellId_);
+					}
 				}
-				//std::cout << "\n\rна клетке: " << focusedCellId_ + 1 << " | " << x << ", " << y;
-				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			else
 			{
-				if (game.focusedCellId_ != -1)
+				if (game.focusedCellId_ != -1 &&
+					game.getCellStatus(game.focusedCellId_) == TicTacToe::CellStatus::focus)
 				{
 					game.setCell(TicTacToe::CellStatus::empty, game.focusedCellId_);
 				}
-				//std::cout << "\n\rне на клетке " << x << ", " << y;
-				//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 			break;
 		}

@@ -46,7 +46,7 @@ TicTacToe::TicTacToe(int gameGridSize)
 void TicTacToe::startRound() {
 	static std::string hideCursor = "\033[?25l\n";
 	std::cout << hideCursor;
-	stepCount_ = 1;
+	stepCount_ = 0;
 	for (;;)
 	{
 		setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами

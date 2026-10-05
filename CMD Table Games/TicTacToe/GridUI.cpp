@@ -34,6 +34,14 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 					gridBufferStr += " ◯ ";
 				}
 			}
+			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::cross)
+			{
+				gridBufferStr += " ╳ ";
+			}
+			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::cross)
+			{
+				gridBufferStr += " ◯ ";
+			}
 			gridBufferStr += (k == (i + 1) * game.gridSize_ - 1 ? "" : "│");
 			cellCoordX += 4;
 		}
@@ -113,6 +121,14 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 					{
 						gridBufferStr += "O";
 					}
+				}
+				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::cross)
+				{
+					gridBufferStr += "X";
+				}
+				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::zero)
+				{
+					gridBufferStr += "O";
 				}
 				++charColCount;
 			}
