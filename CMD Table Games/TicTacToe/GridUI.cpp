@@ -107,6 +107,10 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 					++cellCount;
 					isEndCell = false;
 				}
+
+				std::string colorRed = "\033[38;2;220;60;60m";
+				std::string colorBlue = "\033[38;2;80;140;255m";
+
 				if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::empty)
 				{
 					gridBufferStr += " ";
@@ -115,20 +119,20 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 				{
 					if (game.stepCount_ % 2 == 0)
 					{
-						gridBufferStr += getCrossChar(game, accurateCellCount, charColCount, charRowCount);
+						gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), colorRed);
 					}
 					else
 					{
-						gridBufferStr += getZeroChar(game, accurateCellCount, charColCount, i);
+						gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), colorBlue);
 					}
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::cross)
 				{
-					gridBufferStr += getCrossChar(game, accurateCellCount, charColCount, charRowCount);
+					gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), colorRed);
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::zero)
 				{
-					gridBufferStr += getZeroChar(game, accurateCellCount, charColCount, i);
+					gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), colorBlue);
 				}
 				++charColCount;
 			}
@@ -184,13 +188,24 @@ std::string GridUI::getCrossChar(TicTacToe& game, int cellID, int colCount, int 
 		const double d = (std::min)(dMain, dAnti);
 
 		constexpr double half = 0.09;
-		static const char* const ramp[] = { " ", ".", ":", "-", "=", "+", "*", "#", "%", "@" };
-		constexpr int N = std::size(ramp) - 1;
+
+		static const char* const rampTop[] = { " ", "'", ":", "‾", "=", "+", "*", "#", "%", "@" };
+		static const char* const rampBot[] = { " ", ".", ":", "_", "=", "+", ",", "#", "%", "@" };
+		constexpr int N = std::size(rampTop) - 1;
 
 		if (d < half)
 		{
-			const int idx = std::clamp(int((half - d) / half * N), 0, N);
-			ch = ramp[idx];
+			int idx = std::clamp(int((half - d) / half * N), 0, N);
+
+			const bool isCenterX = (x == W / 2 - 1) || (x == W / 2);
+			const bool isCenterY = (y == H / 2 - 1) || (y == H / 2);
+			if (isCenterX && isCenterY)
+				idx = (std::min)(idx + 2, N);
+
+			const bool mainIsCloser = (dMain <= dAnti);
+			const bool lowerSide = mainIsCloser ? (sy > sx): (sx + sy > 1.0);
+
+			ch = lowerSide ? rampTop[idx] : rampBot[idx];
 		}
 	}
 	return ch;
@@ -235,4 +250,10 @@ std::string GridUI::getZeroChar(TicTacToe& game, int cellID, int colCount, int i
 		}
 	}
 	return ch;
+}
+
+std::string GridUI::colorizeChar(std::string ch, std::string& color) {
+	if (ch == " ") return std::string(ch);
+	std::string colorReset = "\033[0m";
+	return std::string(color) + std::string(ch) + colorReset;
 }

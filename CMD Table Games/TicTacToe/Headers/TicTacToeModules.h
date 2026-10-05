@@ -19,6 +19,7 @@ public:
 	std::string getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int existingLinesNum);
 	std::string getZeroChar(TicTacToe& game, int cellID, int colCount, int rowCount);
 	std::string getCrossChar(TicTacToe& game, int cellID, int colCount, int i);
+	std::string colorizeChar(std::string ch, std::string& color);
 };
 
 class GameUI {
