@@ -50,7 +50,6 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 	return gridBufferStr;
 }
 
-
 std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int existingLinesNum) {
 	std::string gridBufferStr;
 	int cellCount{};
