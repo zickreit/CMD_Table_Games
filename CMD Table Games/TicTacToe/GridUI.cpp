@@ -189,8 +189,8 @@ std::string GridUI::getCrossChar(TicTacToe& game, int cellID, int colCount, int 
 
 		constexpr double half = 0.09;
 
-		static const char* const rampTop[] = { " ", "'", ":", "‾", "=", "+", "*", "#", "%", "@" };
-		static const char* const rampBot[] = { " ", ".", ":", "_", "=", "+", ",", "#", "%", "@" };
+		static const char* rampTop[] = { " ", "'", ":", "‾", "=", "+", "*", "#", "%", "@" };
+		static const char* rampBot[] = { " ", ".", ":", "_", "=", "+", ",", "#", "%", "@" };
 		constexpr int N = std::size(rampTop) - 1;
 
 		if (d < half)
@@ -235,8 +235,8 @@ std::string GridUI::getZeroChar(TicTacToe& game, int cellID, int colCount, int i
 
 		constexpr double half = 0.10;
 
-		static const char* const rampTop[] = { " ", "'", "○", "●", "■", "█" };
-		static const char* const rampBot[] = { " ", ".", "○", "●", "■", "█" };
+		static const char* rampTop[] = { " ", "'", "○", "●", "■", "█" };
+		static const char* rampBot[] = { " ", ".", "○", "●", "■", "█" };
 		constexpr int N = std::size(rampTop) - 1;
 
 		if (d < half)
@@ -252,7 +252,7 @@ std::string GridUI::getZeroChar(TicTacToe& game, int cellID, int colCount, int i
 	return ch;
 }
 
-std::string GridUI::colorizeChar(std::string& ch, std::string& color) {
+std::string GridUI::colorizeChar(std::string&& ch, std::string& color) {
 	if (ch == " ") return ch;
 	std::string colorReset = "\033[0m";
 	return color + ch + colorReset;
