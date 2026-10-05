@@ -25,7 +25,7 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 			}
 			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::focus)
 			{
-				if (game.stepCount_ % 2 != 0)
+				if (game.stepCount_ % 2 == 0)
 				{
 					gridBufferStr += " ╳ ";
 				}
@@ -113,7 +113,7 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::focus)
 				{
-					if (game.stepCount_ % 2 != 0)
+					if (game.stepCount_ % 2 == 0)
 					{
 						gridBufferStr += "X";
 					}
