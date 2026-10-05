@@ -144,12 +144,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\ConsoleWindow.cpp" />
+    <ClCompile Include="TicTacToe\GameUI.cpp" />
+    <ClCompile Include="TicTacToe\GridUI.cpp" />
+    <ClCompile Include="TicTacToe\MouseInteraction.cpp" />
+    <ClCompile Include="TicTacToe\OtherUI.cpp" />
     <ClCompile Include="TicTacToe\TicTacToeGame.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\ConsoleWindow.h" />
-    <ClInclude Include="TicTacToe\TicTacToeGame.h" />
+    <ClInclude Include="TicTacToe\Headers\TicTacToeGame.h" />
+    <ClInclude Include="TicTacToe\Headers\TicTacToeModules.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

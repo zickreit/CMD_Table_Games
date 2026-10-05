@@ -24,12 +24,27 @@
     <ClCompile Include="Common\ConsoleWindow.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="TicTacToe\GridUI.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="TicTacToe\MouseInteraction.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="TicTacToe\GameUI.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="TicTacToe\OtherUI.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\ConsoleWindow.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TicTacToe\TicTacToeGame.h">
+    <ClInclude Include="TicTacToe\Headers\TicTacToeGame.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="TicTacToe\Headers\TicTacToeModules.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

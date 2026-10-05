@@ -8,7 +8,7 @@
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #include <Windows.h>
-#include "TicTacToe/TicTacToeGame.h"
+#include "TicTacToe/Headers/TicTacToeGame.h"
 #include "Common/ConsoleWindow.h"
 
 int main(int argc, char* argv[]) {

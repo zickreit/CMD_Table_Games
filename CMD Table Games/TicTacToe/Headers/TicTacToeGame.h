@@ -3,8 +3,12 @@
 #include <string>
 #include <Windows.h>
 #include "Common/ConsoleWindow.h"
+#include "TicTacToeModules.h"
 
 class TicTacToe : public ConsoleWindow {
+	friend class GameUI;
+	friend class GridUI;
+	friend class MouseInterction;
 private:
 	enum class CellStatus {
 		empty,
@@ -12,6 +16,9 @@ private:
 		cross,
 		zero
 	};
+private:
+	GameUI gameUI;
+	MouseInterction mouseInter;
 private:
 	std::vector<CellStatus> gameGridStats_;
 	std::vector<SMALL_RECT> gameGridCoords_;
@@ -25,17 +32,10 @@ public:
 
 	void startRound();
 
-	void drawUI();
-	std::string getSmallGridUI(int xOffset, int yOffset, int existingLinesNum);
-	std::string getBigGridUI(int xOffset, int yOffset, int existingLinesNum);
-	//std::string getFilledCellsUI();
-
 	int getCell(SHORT x, SHORT y);
 	CellStatus getCellStatus(int id);
 	void setCell(CellStatus cs, int id);
 
-	void mouseEventWaiting();
-	bool isMouseOnCell(short x, short y);
 };
 
 void ticTacToe();
