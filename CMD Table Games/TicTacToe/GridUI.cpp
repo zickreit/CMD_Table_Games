@@ -31,16 +31,16 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 				}
 				else
 				{
-					gridBufferStr += " ◯ ";
+					gridBufferStr += " O ";
 				}
 			}
 			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::cross)
 			{
 				gridBufferStr += " ╳ ";
 			}
-			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::cross)
+			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::zero)
 			{
-				gridBufferStr += " ◯ ";
+				gridBufferStr += " O ";
 			}
 			gridBufferStr += (k == (i + 1) * game.gridSize_ - 1 ? "" : "│");
 			cellCoordX += 4;
@@ -75,7 +75,6 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 		gridBufferStr += std::string(xOffset, ' ');
 		if ((i + 1) % game.gridSizeHeightMultiplier_ == 0)
 		{
-			++charRowCount;
 			cellCount -= game.gridSize_;
 			cellCount = std::clamp(cellCount, 0, game.gridSize_ * game.gridSize_);
 		}
@@ -115,7 +114,26 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 				{
 					if (game.stepCount_ % 2 == 0)
 					{
-						gridBufferStr += "X";
+						int w = game.gridSizeWidthMultiplier_;
+						int h = game.gridSizeHeightMultiplier_;
+						int col = accurateCellCount % game.gridSize_;
+						int row = accurateCellCount / game.gridSize_;
+						int x = charColCount - col * (w + 1);
+						int y = (i - 1) % h;
+						if (x >= 0 && x < w)
+						{
+							int thickness = (std::max)(1, (w + h - 1) / h);
+							int mainStart = (y * w) / h;
+							int antiEnd = w - 1 - mainStart;
+							if ((x >= mainStart && x < mainStart + thickness) || (x > antiEnd - thickness && x <= antiEnd))
+							{
+								gridBufferStr += "X";
+							}
+							else
+							{
+								gridBufferStr += " ";
+							}
+						}
 					}
 					else
 					{
@@ -124,7 +142,26 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::cross)
 				{
-					gridBufferStr += "X";
+					int w = game.gridSizeWidthMultiplier_;
+					int h = game.gridSizeHeightMultiplier_;
+					int col = accurateCellCount % game.gridSize_;
+					int row = accurateCellCount / game.gridSize_;
+					int x = charColCount - col * (w + 1);
+					int y = (i - 1) % h;
+					if (x >= 0 && x < w)
+					{
+						int thickness = (std::max)(1, (w + h - 1) / h);
+						int mainStart = (y * w) / h;
+						int antiEnd = w - 1 - mainStart;
+						if ((x >= mainStart && x < mainStart + thickness) || (x > antiEnd - thickness && x <= antiEnd))
+						{
+							gridBufferStr += "X";
+						}
+						else
+						{
+							gridBufferStr += " ";
+						}
+					}
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::zero)
 				{
@@ -154,6 +191,7 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 			}
 			accurateCellCount += game.gridSize_;
 			gridBufferStr += '\n';
+			++charRowCount;
 		}
 	}
 	return gridBufferStr;
