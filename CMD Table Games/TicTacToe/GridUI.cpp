@@ -1,5 +1,6 @@
 #include <string>
 #include <algorithm>
+#include <cmath>
 #include "Headers/TicTacToeModules.h"
 #include "Headers/TicTacToeGame.h"
 
@@ -114,58 +115,20 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 				{
 					if (game.stepCount_ % 2 == 0)
 					{
-						int w = game.gridSizeWidthMultiplier_;
-						int h = game.gridSizeHeightMultiplier_;
-						int col = accurateCellCount % game.gridSize_;
-						int row = accurateCellCount / game.gridSize_;
-						int x = charColCount - col * (w + 1);
-						int y = (i - 1) % h;
-						if (x >= 0 && x < w)
-						{
-							int thickness = (std::max)(1, (w + h - 1) / h);
-							int mainStart = (y * w) / h;
-							int antiEnd = w - 1 - mainStart;
-							if ((x >= mainStart && x < mainStart + thickness) || (x > antiEnd - thickness && x <= antiEnd))
-							{
-								gridBufferStr += "X";
-							}
-							else
-							{
-								gridBufferStr += " ";
-							}
-						}
+						gridBufferStr += getCrossChar(game, accurateCellCount, charColCount, charRowCount);
 					}
 					else
 					{
-						gridBufferStr += "O";
+						gridBufferStr += getZeroChar(game, accurateCellCount, charColCount, i);
 					}
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::cross)
 				{
-					int w = game.gridSizeWidthMultiplier_;
-					int h = game.gridSizeHeightMultiplier_;
-					int col = accurateCellCount % game.gridSize_;
-					int row = accurateCellCount / game.gridSize_;
-					int x = charColCount - col * (w + 1);
-					int y = (i - 1) % h;
-					if (x >= 0 && x < w)
-					{
-						int thickness = (std::max)(1, (w + h - 1) / h);
-						int mainStart = (y * w) / h;
-						int antiEnd = w - 1 - mainStart;
-						if ((x >= mainStart && x < mainStart + thickness) || (x > antiEnd - thickness && x <= antiEnd))
-						{
-							gridBufferStr += "X";
-						}
-						else
-						{
-							gridBufferStr += " ";
-						}
-					}
+					gridBufferStr += getCrossChar(game, accurateCellCount, charColCount, charRowCount);
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::zero)
 				{
-					gridBufferStr += "O";
+					gridBufferStr += getZeroChar(game, accurateCellCount, charColCount, i);
 				}
 				++charColCount;
 			}
@@ -195,4 +158,81 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 		}
 	}
 	return gridBufferStr;
+}
+
+std::string GridUI::getCrossChar(TicTacToe& game, int cellID, int colCount, int rowCount) {
+	const int W = game.gridSizeWidthMultiplier_;
+	const int H = game.gridSizeHeightMultiplier_;
+
+	const int col = cellID % game.gridSize_;
+	const int row = cellID / game.gridSize_;
+	const int cellLeft = col * (W + 1);
+	const int cellTop = row * (H + 1);
+
+	const int x = colCount - cellLeft;
+	const int y = rowCount - cellTop;
+
+	std::string ch = " ";
+	if (x >= 0 && x < W && y >= 0 && y < H)
+	{
+		const double sx = (x + 0.5) / W;
+		const double sy = (y + 0.5) / H;
+
+		const double inv = 1.0 / std::sqrt(2.0);
+		const double dMain = std::abs(sy - sx) * inv;
+		const double dAnti = std::abs(sx + sy - 1.0) * inv;
+		const double d = (std::min)(dMain, dAnti);
+
+		constexpr double half = 0.09;
+		static const char* const ramp[] = { " ", ".", ":", "-", "=", "+", "*", "#", "%", "@" };
+		constexpr int N = std::size(ramp) - 1;
+
+		if (d < half)
+		{
+			const int idx = std::clamp(int((half - d) / half * N), 0, N);
+			ch = ramp[idx];
+		}
+	}
+	return ch;
+}
+
+
+std::string GridUI::getZeroChar(TicTacToe& game, int cellID, int colCount, int i) {
+	const int W = game.gridSizeWidthMultiplier_;
+	const int H = game.gridSizeHeightMultiplier_;
+
+	const int col = cellID % game.gridSize_;
+	const int row = cellID / game.gridSize_;
+	const int x = colCount - col * (W + 1);
+	const int y = (i - 1) % H;
+
+	std::string ch = " ";
+	if (x >= 0 && x < W && y >= 0 && y < H)
+	{
+		const double sx = (x + 0.5) / W;
+		const double sy = (y + 0.5) / H;
+
+		const double dx = sx - 0.5;
+		const double dy = sy - 0.5;
+		const double r = 0.38;
+		const double dCenter = std::sqrt(dx * dx + dy * dy);
+		const double d = std::abs(dCenter - r);
+
+		constexpr double half = 0.10;
+
+		static const char* const rampTop[] = { " ", "'", "○", "●", "■", "█" };
+		static const char* const rampBot[] = { " ", ".", "○", "●", "■", "█" };
+		constexpr int N = std::size(rampTop) - 1;
+
+		if (d < half)
+		{
+			const int idx = std::clamp(int((half - d) / half * N), 0, N);
+
+			const bool isTop = (sy < 0.5);
+			const bool isInside = (dCenter < r);
+
+			ch = (isTop != isInside) ? rampBot[idx] : rampTop[idx];
+		}
+	}
+	return ch;
 }

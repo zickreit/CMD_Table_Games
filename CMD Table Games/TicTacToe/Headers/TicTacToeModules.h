@@ -17,6 +17,8 @@ private:
 public:
 	std::string getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, int existingLinesNum);
 	std::string getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int existingLinesNum);
+	std::string getZeroChar(TicTacToe& game, int cellID, int colCount, int rowCount);
+	std::string getCrossChar(TicTacToe& game, int cellID, int colCount, int i);
 };
 
 class GameUI {
