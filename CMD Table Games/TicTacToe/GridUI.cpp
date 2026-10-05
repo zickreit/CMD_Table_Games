@@ -252,8 +252,8 @@ std::string GridUI::getZeroChar(TicTacToe& game, int cellID, int colCount, int i
 	return ch;
 }
 
-std::string GridUI::colorizeChar(std::string ch, std::string& color) {
-	if (ch == " ") return std::string(ch);
+std::string GridUI::colorizeChar(std::string& ch, std::string& color) {
+	if (ch == " ") return ch;
 	std::string colorReset = "\033[0m";
-	return std::string(color) + std::string(ch) + colorReset;
+	return color + ch + colorReset;
 }
