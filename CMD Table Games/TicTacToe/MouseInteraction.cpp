@@ -47,6 +47,7 @@ void MouseInterction::mouseEventWaiting(TicTacToe& game) {
 		}
 		else if (inputBufferRecord.EventType == WINDOW_BUFFER_SIZE_EVENT)
 		{
+			game.clearScreen();
 			break;
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
