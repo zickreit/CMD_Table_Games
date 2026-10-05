@@ -47,13 +47,18 @@ void TicTacToe::startRound() {
 	static std::string hideCursor = "\033[?25l\n";
 	std::cout << hideCursor;
 	stepCount_ = 0;
+	gameResult_ = GameResult::notDefined;
+	isPlayerFirst = true;
 	for (;;)
 	{
 		setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами
 		//clearScreen(); // мерцает 
 		//system("cls"); // мерцает + медленно
 		gameUI.drawUI(*this);
-		mouseInter.mouseEventWaiting(*this);
+		if(mouseInter.mouseEventWaiting(*this))
+		{
+			gameResult_ = checkGameResult();
+		}
 	}
 }
 
@@ -81,6 +86,59 @@ void TicTacToe::setCell(CellStatus cs, int id) {
 	if (id < 0 || id >= gameGridStats_.size()) return;
 	gameGridStats_.at(id) = cs;
 }
+
+TicTacToe::GameResult TicTacToe::checkGameResult() {
+	if (stepCount_ < gridSize_) return GameResult::notDefined;
+	int cellId{};
+	int colRepeats{};
+	int rowRepeats{};
+	int repeatsThreshold = std::clamp(gridSize_, 3, 5);
+	for (int row{}; row < gridSize_; ++row)
+	{
+		colRepeats = 0;
+		for (int col{}; col < gridSize_; ++col)
+		{
+			auto currentColCell = getCellStatus(cellId);
+			auto nextColCell = getCellStatus(col + 1 != gridSize_ ? cellId + 1 : cellId);
+			if (currentColCell == nextColCell && 
+				(currentColCell == CellStatus::cross || currentColCell == CellStatus::zero))
+			{
+				++colRepeats;
+			}
+			++cellId;
+		}
+		if(colRepeats == repeatsThreshold)
+		{
+			return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+		}
+	}
+	for (int col{}; col < gridSize_; ++col)
+	{
+		rowRepeats = 0;
+		cellId = col;
+		for (int row{}; row < gridSize_; ++row)
+		{
+			auto currentRowCell = getCellStatus(cellId);
+			cellId += row + 1 != gridSize_ ? 3 : 0;
+			auto nextRowCell = getCellStatus(cellId);
+			if (currentRowCell == nextRowCell &&
+				(currentRowCell == CellStatus::cross || currentRowCell == CellStatus::zero))
+			{
+				++rowRepeats;
+			}
+		}
+		if (rowRepeats == repeatsThreshold)
+		{
+			return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+		}
+	}
+	if (stepCount_ == gridSize_ * gridSize_)
+	{
+		return GameResult::draw;
+	}
+	else return GameResult::notDefined;
+}
+
 
 
 void ticTacToe() {

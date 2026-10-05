@@ -16,17 +16,28 @@ private:
 		cross,
 		zero
 	};
+	enum class GameResult {
+		win,
+		lose,
+		draw,
+		notDefined
+	};
 private:
 	GameUI gameUI;
 	MouseInterction mouseInter;
 private:
 	std::vector<CellStatus> gameGridStats_;
 	std::vector<SMALL_RECT> gameGridCoords_;
+
 	int gridSize_{};
 	int gridSizeWidthMultiplier_{};
 	int gridSizeHeightMultiplier_{};
+
 	int stepCount_{};
 	int focusedCellId_ = -1;
+
+	bool isPlayerFirst;
+	GameResult gameResult_;
 public:
 	TicTacToe(int gameGridSize = 3);
 
@@ -36,6 +47,7 @@ public:
 	CellStatus getCellStatus(int id);
 	void setCell(CellStatus cs, int id);
 
+	GameResult checkGameResult();
 };
 
 void ticTacToe();

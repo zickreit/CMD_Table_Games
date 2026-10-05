@@ -3,7 +3,7 @@
 #include <chrono>
 #include "Headers/TicTacToeGame.h"
 
-void MouseInterction::mouseEventWaiting(TicTacToe& game) {
+bool MouseInterction::mouseEventWaiting(TicTacToe& game) {
 	HANDLE hInput = game.getHandleInput();
 	INPUT_RECORD inputBufferRecord;
 	DWORD numRead;
@@ -31,11 +31,13 @@ void MouseInterction::mouseEventWaiting(TicTacToe& game) {
 					{
 						game.setCell(TicTacToe::CellStatus::cross, game.getCell(x, y));
 						++game.stepCount_;
+						return true;
 					}
 					else
 					{
 						game.setCell(TicTacToe::CellStatus::zero, game.getCell(x, y));
 						++game.stepCount_;
+						return true;
 					}
 				}
 				else
@@ -69,6 +71,7 @@ void MouseInterction::mouseEventWaiting(TicTacToe& game) {
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
+	return false;
 }
 
 bool MouseInterction::isMouseOnCell(TicTacToe& game, SHORT x, SHORT y) {

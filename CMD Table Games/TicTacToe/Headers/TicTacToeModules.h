@@ -37,6 +37,6 @@ class MouseInterction {
 private:
 	MouseInterction() = default;
 public:
-	void mouseEventWaiting(TicTacToe& game);
+	bool mouseEventWaiting(TicTacToe& game);
 	bool isMouseOnCell(TicTacToe& game, short x, short y);
 };

@@ -52,6 +52,22 @@ void GameUI::drawUI(TicTacToe& game) {
 		else
 		{
 			std::cout << coutBuffer.str();
+			if (game.gameResult_ == TicTacToe::GameResult::notDefined)
+			{
+				std::cout << "Не завершено!";
+			}
+			else if (game.gameResult_ == TicTacToe::GameResult::draw)
+			{
+				std::cout << "Ничья!       ";
+			}
+			else if (game.gameResult_ == TicTacToe::GameResult::lose)
+			{
+				std::cout << "Проигрыш!    ";
+			}
+			else if (game.gameResult_ == TicTacToe::GameResult::win)
+			{
+				std::cout << "Победа!      ";
+			}
 			break;
 		}
 	}
