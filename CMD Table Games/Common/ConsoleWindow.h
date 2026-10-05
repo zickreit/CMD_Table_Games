@@ -27,4 +27,6 @@ public:
 
 	int getConsoleWidth();
 	int getConsoleHeight();
+
+	void setCursorPos(short x, short y);
 };

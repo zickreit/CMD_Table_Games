@@ -103,3 +103,7 @@ int ConsoleWindow::getConsoleHeight() {
 	}
 	else return 0;
 }
+
+void ConsoleWindow::setCursorPos(short x, short y) {
+	SetConsoleCursorPosition(hOutput_, { x, y });
+}
