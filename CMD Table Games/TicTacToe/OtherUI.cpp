@@ -5,5 +5,5 @@ OtherUI::OtherUI() {
 }
 
 int OtherUI::getButtonId(short x, short y) {
-
+	return 0;
 }

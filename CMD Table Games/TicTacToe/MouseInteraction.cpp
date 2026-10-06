@@ -25,8 +25,9 @@ bool MouseInterction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& bu
 			MOUSE_EVENT_RECORD mer = inputBufferRecord.Event.MouseEvent;
 			SHORT x = mer.dwMousePosition.X;
 			SHORT y = mer.dwMousePosition.Y;
-			if (int id = getButtonId(buttons, x, y) != -1)
+			if (getButtonId(buttons, x, y) != -1)
 			{
+				int id = getButtonId(buttons, x, y);
 				bool isMousePressed = mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED && mer.dwEventFlags == 0;
 				if(isMousePressed)
 					buttons.at(id).setButtonState(Button::State::pressed);
