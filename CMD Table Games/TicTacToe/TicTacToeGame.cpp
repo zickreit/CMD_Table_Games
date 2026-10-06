@@ -88,7 +88,8 @@ void TicTacToe::setCell(CellStatus cs, int id) {
 }
 
 TicTacToe::GameResult TicTacToe::checkGameResult() {
-	if (stepCount_ < gridSize_) return GameResult::notDefined;
+	if (stepCount_ < gridSize_ - 1) return GameResult::notDefined;
+	if (gameResult_ == GameResult::win || gameResult_ == GameResult::lose) return gameResult_;
 	int cellId{};
 	int colRepeats{};
 	int rowRepeats{};
@@ -100,17 +101,19 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		{
 			auto currentColCell = getCellStatus(cellId);
 			auto nextColCell = getCellStatus(col + 1 != gridSize_ ? cellId + 1 : cellId);
-			if (currentColCell == nextColCell && 
+			if (currentColCell == nextColCell &&
 				(currentColCell == CellStatus::cross || currentColCell == CellStatus::zero))
 			{
-				++colRepeats;
+				colRepeats += colRepeats == 0 ? 2 : 1;
+			}
+			else colRepeats = 0;
+			if (colRepeats == repeatsThreshold)
+			{
+				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
 			}
 			++cellId;
 		}
-		if(colRepeats == repeatsThreshold)
-		{
-			return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
-		}
+		
 	}
 	for (int col{}; col < gridSize_; ++col)
 	{
@@ -119,18 +122,20 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		for (int row{}; row < gridSize_; ++row)
 		{
 			auto currentRowCell = getCellStatus(cellId);
-			cellId += row + 1 != gridSize_ ? 3 : 0;
+			cellId += row + 1 != gridSize_ ? gridSize_ : 0;
 			auto nextRowCell = getCellStatus(cellId);
 			if (currentRowCell == nextRowCell &&
 				(currentRowCell == CellStatus::cross || currentRowCell == CellStatus::zero))
 			{
-				++rowRepeats;
+				rowRepeats += rowRepeats == 0 ? 2 : 1;
+			}
+			else rowRepeats = 0;
+			if (rowRepeats == repeatsThreshold)
+			{
+				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
 			}
 		}
-		if (rowRepeats == repeatsThreshold)
-		{
-			return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
-		}
+		
 	}
 	if (stepCount_ == gridSize_ * gridSize_)
 	{
@@ -142,6 +147,6 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 
 void ticTacToe() {
-	TicTacToe game(3);
+	TicTacToe game(10);
 	game.startRound();
 }
