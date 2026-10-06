@@ -4,6 +4,7 @@
 #include "Headers/TicTacToeGame.h"
 
 bool MouseInterction::mouseEventWaiting(TicTacToe& game) {
+	if (game.gameResult_ != TicTacToe::GameResult::notDefined) return false;
 	HANDLE hInput = game.getHandleInput();
 	INPUT_RECORD inputBufferRecord;
 	DWORD numRead;

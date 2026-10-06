@@ -26,7 +26,7 @@ private:
 private:
 	GameUI gameUI{};
 	MouseInterction mouseInter;
-	Bot mode;
+	Bot bot;
 private:
 	std::vector<CellStatus> gameGridStats_;
 	std::vector<SMALL_RECT> gameGridCoords_;
@@ -38,6 +38,7 @@ private:
 	int stepCount_{};
 	int focusedCellId_ = -1;
 
+	bool isPlayerTurn{};
 	bool isPlayerFirst{};
 	GameResult gameResult_{};
 public:

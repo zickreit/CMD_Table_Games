@@ -49,15 +49,33 @@ void TicTacToe::startRound() {
 	stepCount_ = 0;
 	gameResult_ = GameResult::notDefined;
 	isPlayerFirst = true;
+	isPlayerTurn = isPlayerFirst;
+	bot.mode_ = Bot::Modes::easy;
 	for (;;)
 	{
 		setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами
 		//clearScreen(); // мерцает 
 		//system("cls"); // мерцает + медленно
 		gameUI.drawUI(*this);
-		if(mouseInter.mouseEventWaiting(*this))
+		if(isPlayerTurn)
 		{
-			gameResult_ = checkGameResult();
+			if(mouseInter.mouseEventWaiting(*this))
+			{
+				gameResult_ = checkGameResult();
+				isPlayerTurn = false;
+			}
+		}
+		else
+		{
+			if(bot.mode_ != Bot::Modes::off)
+			{
+				bot.makeMove(*this);
+				gameResult_ = checkGameResult();
+			}
+			else if (mouseInter.mouseEventWaiting(*this)) {
+				gameResult_ = checkGameResult();
+			}
+			isPlayerTurn = true;
 		}
 	}
 }
@@ -102,7 +120,12 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		for (int col{}; col < gridSize_; ++col)
 		{
 			auto currentColCell = getCellStatus(cellId);
-			auto nextColCell = getCellStatus(col + 1 != gridSize_ ? cellId + 1 : cellId);
+			if (col + 1 == gridSize_) 
+			{
+				++cellId;
+				break;
+			}
+			auto nextColCell = getCellStatus(cellId + 1);
 			if (currentColCell == nextColCell &&
 				(currentColCell == CellStatus::cross || currentColCell == CellStatus::zero))
 			{
@@ -126,7 +149,8 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		for (int row{}; row < gridSize_; ++row)
 		{
 			auto currentRowCell = getCellStatus(cellId);
-			cellId += row + 1 != gridSize_ ? gridSize_ : 0;
+			if (row + 1 == gridSize_) break;
+			cellId += gridSize_;
 			auto nextRowCell = getCellStatus(cellId);
 			if (currentRowCell == nextRowCell &&
 				(currentRowCell == CellStatus::cross || currentRowCell == CellStatus::zero))

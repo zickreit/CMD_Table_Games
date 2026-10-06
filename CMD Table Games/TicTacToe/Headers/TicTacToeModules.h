@@ -53,8 +53,8 @@ private:
 	};
 	Modes mode_{};
 public:
-	void makeBotMove();
-	int getCellIdEasyMode();
-	int getCellIdMediumMode();
-	int getCellIdHardMode();
+	void makeMove(TicTacToe& game);
+	int getCellIdEasyMode(TicTacToe& game);
+	int getCellIdMediumMode(TicTacToe& game);
+	int getCellIdHardMode(TicTacToe& game);
 };
