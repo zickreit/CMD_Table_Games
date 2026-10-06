@@ -1,13 +1,19 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include "Common/Button.h"
+
 
 class TicTacToe;
 
 class OtherUI {
 	friend class GameUI;
 private:
-	OtherUI() = default;
+	OtherUI();
+	std::vector<Button> buttons_;
+public:
+	int getButtonId(short x, short y);
 };
 
 class GridUI {
@@ -29,7 +35,7 @@ private:
 	OtherUI otherUI;
 	GridUI gridUI;
 public:
-	void drawUI(TicTacToe& game);
+	std::vector<Button>& drawUI(TicTacToe& game);
 };
 
 class MouseInterction {
@@ -37,7 +43,8 @@ class MouseInterction {
 private:
 	MouseInterction() = default;
 public:
-	bool mouseEventWaiting(TicTacToe& game);
+	bool mouseEventWaiting(TicTacToe& game, std::vector<Button>& buttons);
+	int getButtonId(const std::vector<Button>& buttons, short x, short y);
 	bool isMouseOnCell(TicTacToe& game, short x, short y);
 };
 

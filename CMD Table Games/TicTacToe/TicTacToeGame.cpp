@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <string>
 #include <exception>
+#include <vector>
 #include "Headers/TicTacToeGame.h"
 #include "Common/ConsoleWindow.h"
 
@@ -56,10 +57,10 @@ void TicTacToe::startRound() {
 		setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами
 		//clearScreen(); // мерцает 
 		//system("cls"); // мерцает + медленно
-		gameUI.drawUI(*this);
+		auto& buttons = gameUI.drawUI(*this);
 		if(isPlayerTurn)
 		{
-			if(mouseInter.mouseEventWaiting(*this))
+			if(mouseInter.mouseEventWaiting(*this, buttons))
 			{
 				gameResult_ = checkGameResult();
 				isPlayerTurn = false;
@@ -72,7 +73,7 @@ void TicTacToe::startRound() {
 				bot.makeMove(*this);
 				gameResult_ = checkGameResult();
 			}
-			else if (mouseInter.mouseEventWaiting(*this)) {
+			else if (mouseInter.mouseEventWaiting(*this, buttons)) {
 				gameResult_ = checkGameResult();
 			}
 			isPlayerTurn = true;

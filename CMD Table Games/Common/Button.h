@@ -3,21 +3,28 @@
 #include <string>
 
 class Button {
-private:
+public:
 	enum class State {
 		notActive,
 		noInteraction,
 		aiming,
 		pressed
 	};
+private:
 	State state_{};
-	int coordX_{};
-	int coordY_{};
+	short coordX_{};
+	short coordY_{};
 	std::string text_{};
-	int sizeX_{};
-	int sizeY_{};
+	short sizeX_{};
+	short sizeY_{};
 public:
-	Button(int sizeX, int sizeY, const std::string& text);
+	Button(const std::string& text);
 	std::string drawButton(int charX, int charY);
+	short getCoordX() const { return coordX_; }
+	short getCoordY() const { return coordY_; }
+	short getSizeX() const { return sizeX_; }
+	short getSizeY() const { return sizeY_; }
+	State getState() const { return state_; }
+	void setButtonState(State state) { state_ = state; }
+	void setButtonText(const std::string& text) { text_ = text; }
 };
-

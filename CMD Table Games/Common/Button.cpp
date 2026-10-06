@@ -1,7 +1,9 @@
 #include "Common/Button.h"
 
-Button::Button(int sizeX, int sizeY, const std::string& text)
-: sizeX_(sizeX), sizeY_(sizeY), text_(text) {}
+Button::Button(const std::string& text)
+: text_(text) {
+	sizeX_ = text.length();
+}
 
 std::string Button::drawButton(int charX, int charY) {
 	coordX_ = charX;

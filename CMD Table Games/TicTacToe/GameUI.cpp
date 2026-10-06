@@ -7,7 +7,7 @@
 #include "Headers/TicTacToeGame.h"
 #include "Common/Button.h"
 
-void GameUI::drawUI(TicTacToe& game) {
+std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 	for (;;)
 	{
 		std::stringstream coutBuffer;
@@ -25,9 +25,9 @@ void GameUI::drawUI(TicTacToe& game) {
 		{
 			coutBuffer << "Крестики\nНолики\n";
 		}
-		Button b(10, 10, "Начать заново");
-		coutBuffer << b.drawButton(1, 1);
 		int existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
+
+		coutBuffer << otherUI.buttons_.at(0).drawButton(0, existingLinesInBuffer);
 		if (game.gridSize_ >= 10 || game.gridSizeHeightMultiplier_ <= 2)
 		{
 			int centeredSmallOffsetX = (game.getConsoleWidth() - (game.gridSize_ * 4 - 1)) / 2;
@@ -71,7 +71,7 @@ void GameUI::drawUI(TicTacToe& game) {
 			{
 				std::cout << "Победа!      ";
 			}
-			break;
+			return otherUI.buttons_;
 		}
 	}
 }
