@@ -88,12 +88,14 @@ void TicTacToe::setCell(CellStatus cs, int id) {
 }
 
 TicTacToe::GameResult TicTacToe::checkGameResult() {
-	if (stepCount_ < gridSize_ - 1) return GameResult::notDefined;
-	if (gameResult_ == GameResult::win || gameResult_ == GameResult::lose) return gameResult_;
-	int cellId{};
-	int colRepeats{};
-	int rowRepeats{};
 	int repeatsThreshold = std::clamp(gridSize_, 3, 5);
+
+	if (stepCount_ < repeatsThreshold * 2 - 1) return GameResult::notDefined;
+	if (gameResult_ == GameResult::win || gameResult_ == GameResult::lose) return gameResult_;
+
+	int cellId{};
+
+	int colRepeats{};
 	for (int row{}; row < gridSize_; ++row)
 	{
 		colRepeats = 0;
@@ -107,14 +109,16 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 				colRepeats += colRepeats == 0 ? 2 : 1;
 			}
 			else colRepeats = 0;
+
 			if (colRepeats == repeatsThreshold)
 			{
 				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
 			}
 			++cellId;
 		}
-		
 	}
+
+	int rowRepeats{};
 	for (int col{}; col < gridSize_; ++col)
 	{
 		rowRepeats = 0;
@@ -130,12 +134,82 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 				rowRepeats += rowRepeats == 0 ? 2 : 1;
 			}
 			else rowRepeats = 0;
+
 			if (rowRepeats == repeatsThreshold)
 			{
 				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
 			}
 		}
-		
+	}
+
+	int diagRepeats{};
+	for (int colOffset = repeatsThreshold - 1; colOffset < gridSize_ + (gridSize_ - repeatsThreshold); ++colOffset)
+	{
+		if (colOffset > gridSize_ - 1)
+		{
+			cellId = gridSize_ - 1;
+			for (int i = colOffset - (gridSize_ - 1); i > 0; --i)
+			{
+				cellId += cellId + gridSize_ >= gridSize_ * gridSize_ ? 0 : gridSize_;
+			}
+		}
+		else
+		{
+			cellId = colOffset;
+		}
+		diagRepeats = 0;
+		while (cellId % gridSize_ != 0)
+		{
+			auto currentCell = getCellStatus(cellId);
+			cellId += gridSize_ - 1;
+			if (cellId >= gridSize_ * gridSize_) break;
+			auto nextCell = getCellStatus(cellId);
+			if (currentCell == nextCell &&
+				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
+			{
+				diagRepeats += diagRepeats == 0 ? 2 : 1;
+			}
+			else diagRepeats = 0;
+
+			if (diagRepeats == repeatsThreshold)
+			{
+				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+			}
+		}
+	}
+	for (int colOffset = gridSize_ - repeatsThreshold; colOffset >= repeatsThreshold - gridSize_; --colOffset)
+	{
+		if (colOffset < 0)
+		{
+			cellId = 0;
+			for (int i = colOffset; i < 0; ++i)
+			{
+				cellId += cellId + gridSize_ >= gridSize_ * gridSize_ ? 0 : gridSize_;
+			}
+		}
+		else
+		{
+			cellId = colOffset;
+		}
+		diagRepeats = 0;
+		do
+		{
+			auto currentCell = getCellStatus(cellId);
+			cellId += gridSize_ + 1;
+			if (cellId >= gridSize_ * gridSize_) break;
+			auto nextCell = getCellStatus(cellId);
+			if (currentCell == nextCell &&
+				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
+			{
+				diagRepeats += diagRepeats == 0 ? 2 : 1;
+			}
+			else diagRepeats = 0;
+
+			if (diagRepeats == repeatsThreshold)
+			{
+				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+			}
+		} while (cellId % (gridSize_ - 1) != 0 || (cellId + gridSize_) < (gridSize_ * gridSize_));
 	}
 	if (stepCount_ == gridSize_ * gridSize_)
 	{
@@ -147,6 +221,6 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 
 void ticTacToe() {
-	TicTacToe game(10);
+	TicTacToe game(3);
 	game.startRound();
 }
