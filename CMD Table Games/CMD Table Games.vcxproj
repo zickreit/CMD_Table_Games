@@ -143,6 +143,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Common\Button.cpp" />
     <ClCompile Include="TicTacToe\Bot.cpp" />
     <ClCompile Include="Common\ConsoleWindow.cpp" />
     <ClCompile Include="TicTacToe\GameUI.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\Button.h" />
     <ClInclude Include="Common\ConsoleWindow.h" />
     <ClInclude Include="TicTacToe\Headers\TicTacToeGame.h" />
     <ClInclude Include="TicTacToe\Headers\TicTacToeModules.h" />

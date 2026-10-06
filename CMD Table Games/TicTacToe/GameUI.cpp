@@ -5,6 +5,7 @@
 #include <ranges>
 #include "Headers/TicTacToeModules.h"
 #include "Headers/TicTacToeGame.h"
+#include "Common/Button.h"
 
 void GameUI::drawUI(TicTacToe& game) {
 	for (;;)
@@ -24,6 +25,8 @@ void GameUI::drawUI(TicTacToe& game) {
 		{
 			coutBuffer << "Крестики\nНолики\n";
 		}
+		Button b(10, 10, "Начать заново");
+		coutBuffer << b.drawButton(1, 1);
 		int existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
 		if (game.gridSize_ >= 10 || game.gridSizeHeightMultiplier_ <= 2)
 		{
