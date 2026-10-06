@@ -40,3 +40,21 @@ public:
 	bool mouseEventWaiting(TicTacToe& game);
 	bool isMouseOnCell(TicTacToe& game, short x, short y);
 };
+
+class Bot {
+	friend class TicTacToe;
+private:
+	Bot() = default;
+	enum class Modes {
+		off,
+		easy,
+		medium,
+		hard
+	};
+	Modes mode_{};
+public:
+	void makeBotMove();
+	int getCellIdEasyMode();
+	int getCellIdMediumMode();
+	int getCellIdHardMode();
+};

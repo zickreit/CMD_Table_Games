@@ -143,6 +143,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TicTacToe\Bot.cpp" />
     <ClCompile Include="Common\ConsoleWindow.cpp" />
     <ClCompile Include="TicTacToe\GameUI.cpp" />
     <ClCompile Include="TicTacToe\GridUI.cpp" />

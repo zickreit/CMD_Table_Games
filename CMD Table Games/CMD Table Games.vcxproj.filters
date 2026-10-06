@@ -36,6 +36,9 @@
     <ClCompile Include="TicTacToe\OtherUI.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="TicTacToe\Bot.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\ConsoleWindow.h">

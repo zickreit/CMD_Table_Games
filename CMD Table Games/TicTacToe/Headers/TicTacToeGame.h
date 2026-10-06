@@ -9,6 +9,7 @@ class TicTacToe : public ConsoleWindow {
 	friend class GameUI;
 	friend class GridUI;
 	friend class MouseInterction;
+	friend class Bot;
 private:
 	enum class CellStatus {
 		empty,
@@ -23,8 +24,9 @@ private:
 		notDefined
 	};
 private:
-	GameUI gameUI;
+	GameUI gameUI{};
 	MouseInterction mouseInter;
+	Bot mode;
 private:
 	std::vector<CellStatus> gameGridStats_;
 	std::vector<SMALL_RECT> gameGridCoords_;
@@ -36,8 +38,8 @@ private:
 	int stepCount_{};
 	int focusedCellId_ = -1;
 
-	bool isPlayerFirst;
-	GameResult gameResult_;
+	bool isPlayerFirst{};
+	GameResult gameResult_{};
 public:
 	TicTacToe(int gameGridSize = 3);
 
