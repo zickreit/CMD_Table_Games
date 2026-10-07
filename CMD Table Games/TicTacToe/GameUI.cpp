@@ -8,9 +8,12 @@
 #include "Common/Button.h"
 
 std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
-	if (otherUI.buttons_.at(0).getState() == Button::State::pressed)
+	for(int i{}; i < otherUI.buttons_.size(); ++i)
 	{
-		otherUI.implementButtonAction(game, 0);
+		if (otherUI.buttons_.at(i).getState() == Button::State::pressed)
+		{
+			otherUI.implementButtonAction(game, i);
+		}
 	}
 	for (;;)
 	{
@@ -87,7 +90,17 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			}
 			CONSOLE_SCREEN_BUFFER_INFO csbi;
 			GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
-			std::cout << otherUI.buttons_.at(0).drawButton(0, csbi.dwCursorPosition.Y);
+			std::cout << otherUI.buttons_.at(0).drawButton(0, csbi.dwCursorPosition.Y) << " | ";
+			std::cout << otherUI.buttons_.at(1).drawButton(0, csbi.dwCursorPosition.Y) << " | ";
+			if (otherUI.buttons_.at(1).getState() == Button::State::pressed)
+			{
+				std::cout << '\n';
+				GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
+				std::cout << otherUI.buttons_.at(2).drawButton(0, csbi.dwCursorPosition.Y) << " | ";
+				std::cout << otherUI.buttons_.at(3).drawButton(otherUI.buttons_.at(2).getSizeX() + 2, csbi.dwCursorPosition.Y) << " | ";
+				std::cout << otherUI.buttons_.at(4).drawButton(otherUI.buttons_.at(3).getSizeX() + 2, csbi.dwCursorPosition.Y) << " | ";
+				std::cout << otherUI.buttons_.at(5).drawButton(otherUI.buttons_.at(4).getSizeX() + 2, csbi.dwCursorPosition.Y) << " | ";
+			}
 			return otherUI.buttons_;
 		}
 	}
