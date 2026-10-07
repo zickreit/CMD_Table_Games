@@ -27,4 +27,5 @@ public:
 	State getState() const { return state_; }
 	void setButtonState(State state) { state_ = state; }
 	void setButtonText(const std::string& text) { text_ = text; }
+	short getCharByteLength(unsigned char c);
 };
