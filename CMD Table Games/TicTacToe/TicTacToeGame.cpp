@@ -5,6 +5,7 @@
 //     * игровая сетка									| +
 //	   * счёт и раунд									|
 //     * чей ход										|
+//	   * кнопка рестарта								| +
 //	   * кнопка выхода в меню							|
 //	   * кнопка выбора сложности						|
 //	   * кнопка изменения размера поля					|
@@ -12,10 +13,10 @@
 //	   * хранить информацию об статусе каждой ячейки	| +
 //     * хранить информацию об координатах ячеек		| +
 //	   * взаимодействие через нажатие мышки				| +
-//  - выбор соперника									|
+//  - выбор соперника									| +-
 //	   * соперник второй игрок							|
-//	   * соперник бот									|
-//       ~ лёгкая сложность (рандом)					|
+//	   * соперник бот									| +-
+//       ~ лёгкая сложность (рандом)					| +
 //	     ~ средняя сложность (50% алгоритм, 50% рандом) |
 //       ~ высокая сложная (95% - алгоритм)				|
 //
@@ -45,38 +46,45 @@ TicTacToe::TicTacToe(int gameGridSize)
 }
 
 void TicTacToe::startRound() {
-	static std::string hideCursor = "\033[?25l\n";
-	std::cout << hideCursor;
-	stepCount_ = 0;
-	gameResult_ = GameResult::notDefined;
-	isPlayerFirst = true;
-	isPlayerTurn = isPlayerFirst;
-	bot.mode_ = Bot::Modes::easy;
-	for (;;)
+	for(;;)
 	{
-		setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами
-		//clearScreen(); // мерцает 
-		//system("cls"); // мерцает + медленно
-		auto& buttons = gameUI.drawUI(*this);
-		if(isPlayerTurn)
+		isRestartRequired_ = false;
+		gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), { 0, 0, 0, 0 });
+		gameGridStats_.assign((size_t)(gridSize_ * gridSize_), CellStatus(CellStatus::empty));
+		static std::string hideCursor = "\033[?25l\n";
+		std::cout << hideCursor;
+		stepCount_ = 0;
+		gameResult_ = GameResult::notDefined;
+		isPlayerFirst = true;
+		isPlayerTurn = isPlayerFirst;
+		bot.mode_ = Bot::Modes::easy;
+		for (; isRestartRequired_ == false;)
 		{
-			if(mouseInter.mouseEventWaiting(*this, buttons))
+			setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами
+			//clearScreen(); // мерцает 
+			//system("cls"); // мерцает + медленно
+			auto& buttons = gameUI.drawUI(*this);
+			if (isPlayerTurn)
 			{
-				gameResult_ = checkGameResult();
-				isPlayerTurn = false;
+				if (mouseInter.mouseEventWaiting(*this, buttons))
+				{
+					gameResult_ = checkGameResult();
+					isPlayerTurn = false;
+				}
 			}
-		}
-		else
-		{
-			if(bot.mode_ != Bot::Modes::off)
+			else
 			{
-				bot.makeMove(*this);
-				gameResult_ = checkGameResult();
+				if (bot.mode_ != Bot::Modes::off)
+				{
+					bot.makeMove(*this);
+					gameResult_ = checkGameResult();
+				}
+				else if (mouseInter.mouseEventWaiting(*this, buttons))
+				{
+					gameResult_ = checkGameResult();
+				}
+				isPlayerTurn = true;
 			}
-			else if (mouseInter.mouseEventWaiting(*this, buttons)) {
-				gameResult_ = checkGameResult();
-			}
-			isPlayerTurn = true;
 		}
 	}
 }

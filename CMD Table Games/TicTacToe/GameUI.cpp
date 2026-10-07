@@ -8,6 +8,10 @@
 #include "Common/Button.h"
 
 std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
+	if (otherUI.buttons_.at(0).getState() == Button::State::pressed)
+	{
+		otherUI.implementButtonAction(game, 0);
+	}
 	for (;;)
 	{
 		std::stringstream coutBuffer;

@@ -35,6 +35,7 @@ private:
 	int gridSizeWidthMultiplier_{};
 	int gridSizeHeightMultiplier_{};
 
+	bool isRestartRequired_{};
 	int stepCount_{};
 	int focusedCellId_ = -1;
 
@@ -49,6 +50,7 @@ public:
 	int getCell(SHORT x, SHORT y);
 	CellStatus getCellStatus(int id);
 	void setCell(CellStatus cs, int id);
+	void setRestartRequirement(bool state) { isRestartRequired_ = state; }
 
 	GameResult checkGameResult();
 };

@@ -14,6 +14,7 @@ private:
 	std::vector<Button> buttons_;
 public:
 	int getButtonId(short x, short y);
+	void implementButtonAction(TicTacToe& game, int id);
 };
 
 class GridUI {
