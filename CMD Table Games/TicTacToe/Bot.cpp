@@ -1,4 +1,6 @@
 #include <random>
+#include <thread>
+#include <chrono>
 #include "Headers/TicTacToeModules.h"
 #include "Headers/TicTacToeGame.h"
 
@@ -7,6 +9,7 @@ void Bot::makeMove(TicTacToe& game) {
 	auto cellStatus = game.stepCount_ % 2 == 0 ? TicTacToe::CellStatus::cross : TicTacToe::CellStatus::zero;
 	game.setCell(cellStatus, getCellIdEasyMode(game));
 	++game.stepCount_;
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 int Bot::getCellIdEasyMode(TicTacToe& game) {

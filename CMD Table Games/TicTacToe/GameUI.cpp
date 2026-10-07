@@ -31,7 +31,6 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 		}
 		int existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
 
-		coutBuffer << otherUI.buttons_.at(0).drawButton(0, existingLinesInBuffer);
 		if (game.gridSize_ >= 10 || game.gridSizeHeightMultiplier_ <= 2)
 		{
 			int centeredSmallOffsetX = (game.getConsoleWidth() - (game.gridSize_ * 4 - 1)) / 2;
@@ -75,7 +74,20 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			{
 				std::cout << "Победа!      ";
 			}
-			std::cout << " | Раунд: " << game.roundCount_ << " | Счёт игрока: " << game.scorePlayer_ << " | Счёт бота: " << game.scoreBot_;
+			std::cout << " | Раунд: " << game.roundCount_;
+			if(game.bot.mode_ != Bot::Modes::off)
+			{
+				std::cout << " | Счёт игрока: " << game.scorePlayer_ << " | Счёт бота: " << game.scoreBot_ << '\n';
+				std::cout << (game.isPlayerTurn ? "Ход игрока\n" : "Ход бота  \n");
+			}
+			else
+			{
+				std::cout << " | Счёт игрока 1: " << game.scorePlayer_ << " | Счёт игрока 2: " << game.scoreSecondPlayer_;
+				std::cout << (game.isPlayerTurn ? "Ход игрока 1\n" : "Ход игрока 2\n");
+			}
+			CONSOLE_SCREEN_BUFFER_INFO csbi;
+			GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
+			std::cout << otherUI.buttons_.at(0).drawButton(0, csbi.dwCursorPosition.Y);
 			return otherUI.buttons_;
 		}
 	}

@@ -50,6 +50,7 @@ public:
 };
 
 class Bot {
+	friend class GameUI;
 	friend class TicTacToe;
 private:
 	Bot() = default;
