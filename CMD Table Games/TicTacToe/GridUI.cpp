@@ -4,6 +4,11 @@
 #include "Headers/TicTacToeModules.h"
 #include "Headers/TicTacToeGame.h"
 
+static const std::string COLOR_RED = "\033[38;2;220;60;60m";
+static const std::string COLOR_BLUE = "\033[38;2;80;140;255m";
+static const std::string COLOR_RESET = "\033[0m";
+
+
 std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, int existingLinesNum) {
 	std::string gridBufferStr;
 	yOffset = (std::max)(yOffset, 0);
@@ -28,20 +33,20 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 			{
 				if (game.stepCount_ % 2 == 0)
 				{
-					gridBufferStr += " ╳ ";
+					gridBufferStr += colorizeChar(" ╳ ", COLOR_RED);
 				}
 				else
 				{
-					gridBufferStr += " O ";
+					gridBufferStr += colorizeChar(" O ", COLOR_BLUE);
 				}
 			}
 			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::cross)
 			{
-				gridBufferStr += " ╳ ";
+				gridBufferStr += colorizeChar(" ╳ ", COLOR_RED);
 			}
 			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::zero)
 			{
-				gridBufferStr += " O ";
+				gridBufferStr += colorizeChar(" O ", COLOR_BLUE);
 			}
 			gridBufferStr += (k == (i + 1) * game.gridSize_ - 1 ? "" : "│");
 			cellCoordX += 4;
@@ -108,8 +113,7 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 					isEndCell = false;
 				}
 
-				std::string colorRed = "\033[38;2;220;60;60m";
-				std::string colorBlue = "\033[38;2;80;140;255m";
+				
 
 				if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::empty)
 				{
@@ -119,20 +123,20 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 				{
 					if (game.stepCount_ % 2 == 0)
 					{
-						gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), colorRed);
+						gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), COLOR_RED);
 					}
 					else
 					{
-						gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), colorBlue);
+						gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), COLOR_BLUE);
 					}
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::cross)
 				{
-					gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), colorRed);
+					gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), COLOR_RED);
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::zero)
 				{
-					gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), colorBlue);
+					gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), COLOR_BLUE);
 				}
 				++charColCount;
 			}
@@ -252,8 +256,7 @@ std::string GridUI::getZeroChar(TicTacToe& game, int cellID, int colCount, int i
 	return ch;
 }
 
-std::string GridUI::colorizeChar(std::string&& ch, std::string& color) {
+std::string GridUI::colorizeChar(std::string&& ch, const std::string& color) {
 	if (ch == " ") return ch;
-	std::string colorReset = "\033[0m";
-	return color + ch + colorReset;
+	return color + ch + COLOR_RESET;
 }
