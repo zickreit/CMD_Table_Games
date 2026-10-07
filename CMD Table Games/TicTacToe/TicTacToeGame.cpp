@@ -3,7 +3,7 @@
 //  - интерфейс игры									| +-
 //     * большое название игры							| +
 //     * игровая сетка									| +
-//	   * счёт и раунд									|
+//	   * счёт и раунд									| +
 //     * чей ход										|
 //	   * кнопка рестарта								| +
 //	   * кнопка выхода в меню							|
@@ -48,6 +48,25 @@ TicTacToe::TicTacToe(int gameGridSize)
 void TicTacToe::startRound() {
 	for(;;)
 	{
+		if (isRestartRequired_ == false || gameResult_ != GameResult::notDefined)
+		{
+			++roundCount_;
+			if (gameResult_ == GameResult::win)
+			{
+				++scorePlayer_;
+			}
+			else if (gameResult_ == GameResult::lose)
+			{
+				if (bot.mode_ == Bot::Modes::off)
+				{
+					++scoreSecondPlayer_;
+				}
+				else
+				{
+					++scoreBot_;
+				}
+			}
+		}
 		isRestartRequired_ = false;
 		gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), { 0, 0, 0, 0 });
 		gameGridStats_.assign((size_t)(gridSize_ * gridSize_), CellStatus(CellStatus::empty));

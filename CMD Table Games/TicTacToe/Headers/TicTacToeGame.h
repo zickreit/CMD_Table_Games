@@ -18,10 +18,10 @@ private:
 		zero
 	};
 	enum class GameResult {
+		notDefined,
 		win,
 		lose,
-		draw,
-		notDefined
+		draw
 	};
 private:
 	GameUI gameUI{};
@@ -42,6 +42,11 @@ private:
 	bool isPlayerTurn{};
 	bool isPlayerFirst{};
 	GameResult gameResult_{};
+
+	int scorePlayer_{};
+	int scoreSecondPlayer_{};
+	int scoreBot_{};
+	int roundCount_{};
 public:
 	TicTacToe(int gameGridSize = 3);
 

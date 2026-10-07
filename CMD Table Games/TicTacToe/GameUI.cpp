@@ -75,6 +75,7 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			{
 				std::cout << "Победа!      ";
 			}
+			std::cout << " | Раунд: " << game.roundCount_ << " | Счёт игрока: " << game.scorePlayer_ << " | Счёт бота: " << game.scoreBot_;
 			return otherUI.buttons_;
 		}
 	}
