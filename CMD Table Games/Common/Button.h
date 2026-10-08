@@ -5,8 +5,8 @@
 class Button {
 public:
 	enum class State {
-		notActive,
 		noInteraction,
+		notActive,
 		aiming,
 		pressed
 	};
