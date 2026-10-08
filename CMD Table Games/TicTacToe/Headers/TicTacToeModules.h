@@ -52,18 +52,21 @@ public:
 class Bot {
 	friend class GameUI;
 	friend class TicTacToe;
-private:
-	Bot() = default;
+public:
 	enum class Modes {
 		off,
 		easy,
 		medium,
 		hard
 	};
+private:
+	Bot() = default;
 	Modes mode_{};
 public:
 	void makeMove(TicTacToe& game);
 	int getCellIdEasyMode(TicTacToe& game);
 	int getCellIdMediumMode(TicTacToe& game);
 	int getCellIdHardMode(TicTacToe& game);
+	Modes getMode() { return mode_; }
+	void setMode(Modes mode) { mode_ = mode; }
 };

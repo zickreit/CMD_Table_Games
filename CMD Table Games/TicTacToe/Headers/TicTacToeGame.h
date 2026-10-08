@@ -8,6 +8,7 @@
 class TicTacToe : public ConsoleWindow {
 	friend class GameUI;
 	friend class GridUI;
+	friend class OtherUI;
 	friend class MouseInterction;
 	friend class Bot;
 private:
