@@ -9,7 +9,7 @@ void Bot::makeMove(TicTacToe& game) {
 	auto cellStatus = game.stepCount_ % 2 == 0 ? TicTacToe::CellStatus::cross : TicTacToe::CellStatus::zero;
 	game.setCell(cellStatus, getCellIdEasyMode(game));
 	++game.stepCount_;
-	//std::this_thread::sleep_for(std::chrono::seconds(1));
+	//std::this_thread::sleep_for(std::chrono::seconds(1)); // раздражает >=O
 }
 
 int Bot::getCellIdEasyMode(TicTacToe& game) {
