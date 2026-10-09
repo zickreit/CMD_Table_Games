@@ -3,7 +3,7 @@
 
 OtherUI::OtherUI() {
 	buttons_.push_back(Button("Рестарт"));
-	buttons_.push_back(Button("Выбрать противника"));
+	buttons_.push_back(Button("Выбрать противника", true));
 	buttons_.push_back(Button("Второй игрок"));
 	buttons_.push_back(Button("Бот (лёгкий)"));
 	buttons_.push_back(Button("Бот (средний)"));
@@ -23,33 +23,52 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	switch (id)
 	{
 	case 0:
+		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		game.setRestartRequirement(true);
 		break;
 	case 1:
-		buttons_.at(1).setButtonState(Button::State::notActive);
-		buttons_.at(2).setButtonState(game.bot.getMode() == Bot::Modes::off ? Button::State::notActive : Button::State::noInteraction);
-		buttons_.at(3).setButtonState(game.bot.getMode() == Bot::Modes::easy ? Button::State::notActive : Button::State::noInteraction);
-		buttons_.at(4).setButtonState(game.bot.getMode() == Bot::Modes::medium ? Button::State::notActive : Button::State::noInteraction);
-		buttons_.at(5).setButtonState(game.bot.getMode() == Bot::Modes::hard ? Button::State::notActive : Button::State::noInteraction);
+		if (buttons_.at(1).getSwitchState() == 1)
+		{
+			buttons_.at(2).setButtonState(game.bot.getMode() == Bot::Modes::off ? Button::State::activated : Button::State::noInteraction);
+			buttons_.at(3).setButtonState(game.bot.getMode() == Bot::Modes::easy ? Button::State::activated : Button::State::noInteraction);
+			buttons_.at(4).setButtonState(game.bot.getMode() == Bot::Modes::medium ? Button::State::activated : Button::State::noInteraction);
+			buttons_.at(5).setButtonState(game.bot.getMode() == Bot::Modes::hard ? Button::State::activated : Button::State::noInteraction);
+		}
+		else if (buttons_.at(1).getSwitchState() == 0)
+		{
+			buttons_.at(1).setButtonState(Button::State::noInteraction);
+		}
 		break;
 	case 2:
-		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		if (buttons_.at(id).getState() != Button::State::pressed) break;
+		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::off);
+		game.scoreBot_ = 0;
+		game.scorePlayer_ = 0;
 		game.setRestartRequirement(true);
 		break;
 	case 3:
-		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		if (buttons_.at(id).getState() != Button::State::pressed) break;
+		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::easy);
+		game.scoreBot_ = 0;
+		game.scorePlayer_ = 0;
 		game.setRestartRequirement(true);
 		break;
 	case 4:
-		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		if (buttons_.at(id).getState() != Button::State::pressed) break;
+		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::medium);
+		game.scoreBot_ = 0;
+		game.scorePlayer_ = 0;
 		game.setRestartRequirement(true);
 		break;
 	case 5:
-		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		if (buttons_.at(id).getState() != Button::State::pressed) break;
+		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::hard);
+		game.scoreBot_ = 0;
+		game.scorePlayer_ = 0;
 		game.setRestartRequirement(true);
 		break;
 

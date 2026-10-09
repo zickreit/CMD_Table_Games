@@ -1,8 +1,9 @@
 #include "Common/Button.h"
 #include "Common/ColorsCodes.h"
 
-Button::Button(const std::string& text)
-: text_(text) {
+Button::Button(const std::string& text, bool isSwitch)
+: text_(text), isSwitch_(isSwitch) {
+	if (isSwitch_) switchState_ = 0;
 	for (auto c : text_)
 	{
 		sizeX_ += getCharByteLength(static_cast<unsigned char>(c));
@@ -12,7 +13,7 @@ Button::Button(const std::string& text)
 std::string Button::drawButton(int charX, int charY) {
 	coordX_ = charX;
 	coordY_ = charY;
-	if (state_ == State::notActive)
+	if (state_ == State::activated)
 	{
 		return ColorCodes::darkGrey + text_ + ColorCodes::reset;
 	}

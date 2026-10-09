@@ -6,7 +6,7 @@ class Button {
 public:
 	enum class State {
 		noInteraction,
-		notActive,
+		activated,
 		aiming,
 		pressed
 	};
@@ -17,8 +17,10 @@ private:
 	std::string text_{};
 	short sizeX_{};
 	short sizeY_{};
+	bool isSwitch_{};
+	int switchState_ = -1;
 public:
-	Button(const std::string& text);
+	Button(const std::string& text, bool isSwitch = false);
 	std::string drawButton(int charX, int charY);
 	short getCoordX() const { return coordX_; }
 	short getCoordY() const { return coordY_; }
@@ -28,4 +30,7 @@ public:
 	void setButtonState(State state) { state_ = state; }
 	void setButtonText(const std::string& text) { text_ = text; }
 	short getCharByteLength(unsigned char c);
+	bool isSwitchButton() { return isSwitch_; }
+	int getSwitchState() { return switchState_; }
+	void setSwitchState(int state) { switchState_ = state; }
 };

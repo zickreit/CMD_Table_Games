@@ -27,9 +27,21 @@ bool MouseInterction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& bu
 			if (getButtonId(buttons, x, y) != -1)
 			{
 				int id = getButtonId(buttons, x, y);
-				if(buttons.at(id).getState() != Button::State::notActive)
+				bool isMousePressed = mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED && mer.dwEventFlags == 0;
+				if (buttons.at(id).isSwitchButton())
 				{
-					bool isMousePressed = mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED && mer.dwEventFlags == 0;
+					if (isMousePressed)
+					{
+						buttons.at(id).setSwitchState(1 - buttons.at(id).getSwitchState());
+						buttons.at(id).setButtonState(Button::State::pressed);
+					}
+					else
+					{
+						buttons.at(id).setButtonState(Button::State::aiming);
+					}
+				}
+				else if(buttons.at(id).getState() != Button::State::activated)
+				{
 					if (isMousePressed)
 					{
 						buttons.at(id).setButtonState(Button::State::pressed);
@@ -44,7 +56,18 @@ bool MouseInterction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& bu
 			{
 				for (auto& button : buttons)
 				{
-					if (button.getState() == Button::State::aiming)
+					if (button.isSwitchButton())
+					{
+						if (button.getSwitchState() == 0)
+						{
+							button.setButtonState(Button::State::noInteraction);
+						}
+						else if (button.getSwitchState() == 1)
+						{
+							button.setButtonState(Button::State::activated);
+						}
+					}
+					else if (button.getState() == Button::State::aiming)
 					{
 						button.setButtonState(Button::State::noInteraction);
 					}
