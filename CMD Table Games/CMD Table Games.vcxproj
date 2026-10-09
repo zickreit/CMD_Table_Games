@@ -156,6 +156,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\Headers\Button.h" />
+    <ClInclude Include="Common\Headers\ColorsCodes.h" />
+    <ClInclude Include="Common\Headers\ConsoleWindow.h" />
+    <ClInclude Include="Common\Headers\Menu.h" />
+    <ClInclude Include="Common\Headers\MenuInteraction.h" />
     <ClInclude Include="TicTacToe\Headers\TicTacToeGame.h" />
     <ClInclude Include="TicTacToe\Headers\TicTacToeModules.h" />
   </ItemGroup>
