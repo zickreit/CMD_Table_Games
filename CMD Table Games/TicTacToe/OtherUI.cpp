@@ -25,6 +25,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	case 0:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		game.setRestartRequirement(true);
+		buttons_.at(0).setButtonState(Button::State::noInteraction);
 		break;
 	case 1:
 		if (buttons_.at(1).getSwitchState() == 1)
