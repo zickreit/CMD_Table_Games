@@ -8,13 +8,13 @@
 //	   * кнопка рестарта								| +
 //	   * кнопка выхода в меню							|
 //	   * кнопка выбора сложности						| +
-//	   * кнопка изменения размера поля					|
+//	   * кнопка изменения размера поля					| +
 //	- функциональная игровая сетка						| +
 //	   * хранить информацию об статусе каждой ячейки	| +
 //     * хранить информацию об координатах ячеек		| +
 //	   * взаимодействие через нажатие мышки				| +
 //  - выбор соперника									| +-
-//	   * соперник второй игрок							|
+//	   * соперник второй игрок							| +
 //	   * соперник бот									| +-
 //       ~ лёгкая сложность (рандом)					| +
 //	     ~ средняя сложность (50% алгоритм, 50% рандом) |
@@ -30,7 +30,7 @@
 #include "Common/ConsoleWindow.h"
 
 TicTacToe::TicTacToe(int gameGridSize)
-	: ConsoleWindow::ConsoleWindow(65, 45, L"Крестики-Нолики") {
+	: ConsoleWindow::ConsoleWindow(70, 50, L"Крестики-Нолики") {
 	gridSize_ = std::clamp(gameGridSize, 3, getConsoleWidth() / 4);
 	gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), {0, 0, 0, 0});
 	gameGridStats_.assign((size_t)(gridSize_ * gridSize_), CellStatus(CellStatus::empty));
@@ -67,6 +67,7 @@ void TicTacToe::startRound() {
 				}
 			}
 		}
+		focusedCellId_ = -1;
 		isRestartRequired_ = false;
 		gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), { 0, 0, 0, 0 });
 		gameGridStats_.assign((size_t)(gridSize_ * gridSize_), CellStatus(CellStatus::empty));
@@ -83,6 +84,11 @@ void TicTacToe::startRound() {
 			//clearScreen(); // мерцает 
 			//system("cls"); // мерцает + медленно
 			auto& buttons = gameUI.drawUI(*this);
+			if (isRestartRequired_) 
+			{
+				clearScreen();
+				break;
+			}
 			if (isPlayerTurn)
 			{
 				if (mouseInter.mouseEventWaiting(*this, buttons))
@@ -271,6 +277,17 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 	else return GameResult::notDefined;
 }
 
+void TicTacToe::setGridSize(int newSize) {
+	gridSize_ = std::clamp(newSize, 3, getConsoleWidth() / 4);
+	gridSizeWidthMultiplier_ = (getConsoleWidth() - gridSize_) / gridSize_;
+	gridSizeWidthMultiplier_ -= gridSizeWidthMultiplier_ % 2 != 0 ? 1 : 0;
+	gridSizeHeightMultiplier_ = gridSizeWidthMultiplier_ / 2;
+	while (gridSize_ * gridSizeHeightMultiplier_ + (gridSize_ - 1) > getConsoleHeight())
+	{
+		--gridSizeHeightMultiplier_;
+		gridSizeWidthMultiplier_ -= 2;
+	}
+}
 
 
 void ticTacToe() {

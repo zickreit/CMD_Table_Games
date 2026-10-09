@@ -16,6 +16,10 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			otherUI.implementButtonAction(game, i);
 		}
 	}
+	if(game.isRestartRequired_) 
+	{
+		return otherUI.buttons_;
+	}
 	for (;;)
 	{
 		std::stringstream coutBuffer;
@@ -35,7 +39,7 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 		}
 		int existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
 
-		if (game.gridSize_ >= 10 || game.gridSizeHeightMultiplier_ <= 2)
+		if (/*game.gridSize_ >= 10 || */game.gridSizeHeightMultiplier_ <= 2)
 		{
 			int centeredSmallOffsetX = (game.getConsoleWidth() - (game.gridSize_ * 4 - 1)) / 2;
 			//int centeredSmallOffsetY = (getConsoleHeight() - (gridSize_ * 2 - 1)) / 2;
@@ -68,28 +72,28 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			}
 			else if (game.gameResult_ == TicTacToe::GameResult::draw)
 			{
-				std::cout << "Ничья!       ";
+				std::cout << "Ничья!";
 			}
 			else if (game.gameResult_ == TicTacToe::GameResult::lose)
 			{
-				std::cout << "Проигрыш!    ";
+				std::cout << "Проигрыш!";
 			}
 			else if (game.gameResult_ == TicTacToe::GameResult::win)
 			{
-				std::cout << "Победа!      ";
+				std::cout << "Победа!";
 			}
-			std::cout << " | Раунд: " << game.roundCount_;
+			std::cout << "\033[K | Раунд: " << game.roundCount_;
 			if(game.bot.mode_ != Bot::Modes::off)
 			{
 				std::cout << "\033[K";
 				std::cout << " | Счёт игрока: " << game.scorePlayer_ << " | Счёт бота: " << game.scoreBot_ << '\n';
-				std::cout << (game.isPlayerTurn ? "Ход игрока\n" : "Ход бота  \n");
+				std::cout << (game.isPlayerTurn ? "Ход игрока\033[K\n" : "Ход бота\033[K\n");
 			}
 			else
 			{
 				std::cout << "\033[K";
 				std::cout << " | Счёт игрока 1: " << game.scorePlayer_ << " | Счёт игрока 2: " << game.scoreSecondPlayer_ << '\n';
-				std::cout << (game.isPlayerTurn ? "Ход игрока 1\n" : "Ход игрока 2\n");
+				std::cout << (game.isPlayerTurn ? "Ход игрока 1\033[K\n" : "Ход игрока 2\033[K\n");
 			}
 			CONSOLE_SCREEN_BUFFER_INFO csbi;
 			GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
@@ -121,7 +125,7 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 				std::cout << otherUI.buttons_.at(9).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << " | ";
 				GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
 				std::cout << otherUI.buttons_.at(10).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y);
-				std::cout << "                  ";
+				std::cout << "\n\r\033[K";
 			}
 			else
 			{

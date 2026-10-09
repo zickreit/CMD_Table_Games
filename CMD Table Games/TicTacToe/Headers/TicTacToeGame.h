@@ -57,6 +57,7 @@ public:
 	CellStatus getCellStatus(int id);
 	void setCell(CellStatus cs, int id);
 	void setRestartRequirement(bool state) { isRestartRequired_ = state; }
+	void setGridSize(int newSize);
 
 	GameResult checkGameResult();
 };
