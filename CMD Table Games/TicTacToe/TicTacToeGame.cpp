@@ -26,6 +26,7 @@
 #include <string>
 #include <exception>
 #include <vector>
+#include <random>
 #include "Headers/TicTacToeGame.h"
 #include "Common/ConsoleWindow.h"
 
@@ -75,7 +76,10 @@ void TicTacToe::startRound() {
 		std::cout << hideCursor;
 		stepCount_ = 0;
 		gameResult_ = GameResult::notDefined;
-		isPlayerFirst = true;
+		static std::random_device rd;
+		static std::mt19937 mt(rd());
+		std::uniform_int_distribution<int> distrib(0, 1);
+		isPlayerFirst = static_cast<bool>(distrib(mt));
 		isPlayerTurn = isPlayerFirst;
 		//bot.mode_ = Bot::Modes::easy;
 		for (; isRestartRequired_ == false;)
