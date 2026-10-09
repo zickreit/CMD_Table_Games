@@ -32,5 +32,26 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		buttons_.at(4).setButtonState(game.bot.getMode() == Bot::Modes::medium ? Button::State::notActive : Button::State::noInteraction);
 		buttons_.at(5).setButtonState(game.bot.getMode() == Bot::Modes::hard ? Button::State::notActive : Button::State::noInteraction);
 		break;
+	case 2:
+		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		game.bot.setMode(Bot::Modes::off);
+		game.setRestartRequirement(true);
+		break;
+	case 3:
+		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		game.bot.setMode(Bot::Modes::easy);
+		game.setRestartRequirement(true);
+		break;
+	case 4:
+		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		game.bot.setMode(Bot::Modes::medium);
+		game.setRestartRequirement(true);
+		break;
+	case 5:
+		buttons_.at(1).setButtonState(Button::State::noInteraction);
+		game.bot.setMode(Bot::Modes::hard);
+		game.setRestartRequirement(true);
+		break;
+
 	}
 }

@@ -76,7 +76,7 @@ void TicTacToe::startRound() {
 		gameResult_ = GameResult::notDefined;
 		isPlayerFirst = true;
 		isPlayerTurn = isPlayerFirst;
-		bot.mode_ = Bot::Modes::easy;
+		//bot.mode_ = Bot::Modes::easy;
 		for (; isRestartRequired_ == false;)
 		{
 			setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами
@@ -97,12 +97,13 @@ void TicTacToe::startRound() {
 				{
 					bot.makeMove(*this);
 					gameResult_ = checkGameResult();
+					isPlayerTurn = true;
 				}
 				else if (mouseInter.mouseEventWaiting(*this, buttons))
 				{
 					gameResult_ = checkGameResult();
+					isPlayerTurn = true;
 				}
-				isPlayerTurn = true;
 			}
 		}
 	}
