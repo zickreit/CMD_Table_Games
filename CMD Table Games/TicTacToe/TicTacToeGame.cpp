@@ -28,7 +28,7 @@
 #include <vector>
 #include <random>
 #include "Headers/TicTacToeGame.h"
-#include "Common/ConsoleWindow.h"
+#include "Common/Headers/ConsoleWindow.h"
 
 TicTacToe::TicTacToe(int gameGridSize)
 	: ConsoleWindow::ConsoleWindow(70, 50, L"Крестики-Нолики") {

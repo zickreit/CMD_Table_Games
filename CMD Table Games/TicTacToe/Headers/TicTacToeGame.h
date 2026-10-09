@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <Windows.h>
-#include "Common/ConsoleWindow.h"
+#include "Common/Headers/ConsoleWindow.h"
 #include "TicTacToeModules.h"
 
 class TicTacToe : public ConsoleWindow {

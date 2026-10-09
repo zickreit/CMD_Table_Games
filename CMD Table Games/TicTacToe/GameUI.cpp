@@ -5,7 +5,7 @@
 #include <ranges>
 #include "Headers/TicTacToeModules.h"
 #include "Headers/TicTacToeGame.h"
-#include "Common/Button.h"
+#include "Common/Headers/Button.h"
 
 std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 	for(int i{}; i < otherUI.buttons_.size(); ++i)

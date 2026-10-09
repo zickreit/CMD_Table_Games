@@ -9,13 +9,14 @@
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #include <Windows.h>
 #include "TicTacToe/Headers/TicTacToeGame.h"
-#include "Common/ConsoleWindow.h"
+#include "Common/Headers/ConsoleWindow.h"
+#include "Common/Headers/Menu.h"
 
 int main(int argc, char* argv[]) {
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	ticTacToe();
+	drawMenu();
 }
 #else
 #include <cstdlib>

@@ -5,7 +5,7 @@
 #include <string>
 #include "Headers/TicTacToeGame.h"
 #include "Headers/TicTacToeModules.h"
-#include "Common/Button.h"
+#include "Common/Headers/Button.h"
 
 bool MouseInterction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& buttons) {
 	HANDLE hInput = game.getHandleInput();

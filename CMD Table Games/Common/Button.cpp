@@ -1,5 +1,5 @@
-#include "Common/Button.h"
-#include "Common/ColorsCodes.h"
+#include "Common/Headers/Button.h"
+#include "Common/Headers/ColorsCodes.h"
 
 Button::Button(const std::string& text, bool isSwitch)
 : text_(text), isSwitch_(isSwitch) {
