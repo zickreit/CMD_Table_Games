@@ -11,12 +11,23 @@
 #include "TicTacToe/Headers/TicTacToeGame.h"
 #include "Common/Headers/ConsoleWindow.h"
 #include "Common/Headers/Menu.h"
+#include "Common/Headers/MenuInteraction.h"
 
 int main(int argc, char* argv[]) {
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	drawMenu();
+	ConsoleWindow cw(70, 50, L"Меню");
+	std::cout << "\033[?25l\n";
+
+	while (true)
+	{
+		cw.setCursorPos(0, 0);
+		MenuUI menu;
+		MenuInteraction mi;
+		
+		mi.mouseEventWaiting(cw, menu.drawMenu(cw));
+	}
 }
 #else
 #include <cstdlib>

@@ -4,12 +4,10 @@
 #include "Button.h"
 #include "ConsoleWindow.h"
 
-class MenuUI : ConsoleWindow {
+class MenuUI {
 private:
 	std::vector<Button> buttons_;
 public:
 	MenuUI();
-	void drawMenu();
+	std::vector<Button> drawMenu(ConsoleWindow& cw);
 };
-
-void drawMenu();

@@ -1,5 +1,10 @@
 #pragma once
 
-class MenuInteraction {
+#include <vector>
+#include "Button.h"
+#include "ConsoleWindow.h"
 
+class MenuInteraction {
+public:
+	bool mouseEventWaiting(ConsoleWindow& cw, const std::vector<Button>& buttons);
 };
