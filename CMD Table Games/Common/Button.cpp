@@ -11,6 +11,7 @@ Button::Button(const std::string& text, bool isSwitch)
 }
 
 std::string Button::drawButton(int charX, int charY) {
+	isDrawed_ = true;
 	coordX_ = charX;
 	coordY_ = charY;
 	if (state_ == State::activated)

@@ -17,6 +17,7 @@ private:
 	std::string text_{};
 	short sizeX_{};
 	short sizeY_{};
+	bool isDrawed_{};
 	bool isSwitch_{};
 	int switchState_ = -1;
 public:
@@ -29,8 +30,10 @@ public:
 	State getState() const { return state_; }
 	void setButtonState(State state) { state_ = state; }
 	void setButtonText(const std::string& text) { text_ = text; }
-	short getCharByteLength(unsigned char c);
-	bool isSwitchButton() { return isSwitch_; }
-	int getSwitchState() { return switchState_; }
+	short getCharByteLength(unsigned char c) ;
+	bool isSwitchButton() const { return isSwitch_; }
+	int getSwitchState() const { return switchState_; }
 	void setSwitchState(int state) { switchState_ = state; }
+	bool isDrawed() const { return isDrawed_; }
+	void setDrawedState(bool state) { isDrawed_ = state; }
 };
