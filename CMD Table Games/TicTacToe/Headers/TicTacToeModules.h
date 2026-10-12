@@ -55,10 +55,10 @@ class Bot {
 	friend class TicTacToe;
 public:
 	enum class Modes {
-		off,
-		easy,
+		hard,
 		medium,
-		hard
+		easy,
+		off
 	};
 private:
 	Bot() = default;
