@@ -156,6 +156,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 	int colRepeats{};
 	for (int row{}; row < gridSize_; ++row)
 	{
+		winningCellsIds.clear();
 		colRepeats = 0;
 		for (int col{}; col < gridSize_; ++col)
 		{
@@ -169,9 +170,15 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 			if (currentColCell == nextColCell &&
 				(currentColCell == CellStatus::cross || currentColCell == CellStatus::zero))
 			{
+				winningCellsIds.push_back(cellId);
+				if (colRepeats == 0) winningCellsIds.push_back(cellId + 1);
 				colRepeats += colRepeats == 0 ? 2 : 1;
 			}
-			else colRepeats = 0;
+			else 
+			{
+				winningCellsIds.clear();
+				colRepeats = 0;
+			}
 
 			if (colRepeats == repeatsThreshold)
 			{
@@ -184,25 +191,32 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 	int rowRepeats{};
 	for (int col{}; col < gridSize_; ++col)
 	{
+		winningCellsIds.clear();
 		rowRepeats = 0;
 		cellId = col;
 		for (int row{}; row < gridSize_; ++row)
 		{
 			auto currentRowCell = getCellStatus(cellId);
 			if (row + 1 == gridSize_) break;
-			cellId += gridSize_;
-			auto nextRowCell = getCellStatus(cellId);
+			auto nextRowCell = getCellStatus(cellId + gridSize_);
 			if (currentRowCell == nextRowCell &&
 				(currentRowCell == CellStatus::cross || currentRowCell == CellStatus::zero))
 			{
+				winningCellsIds.push_back(cellId);
+				if (rowRepeats == 0) winningCellsIds.push_back(cellId + gridSize_);
 				rowRepeats += rowRepeats == 0 ? 2 : 1;
 			}
-			else rowRepeats = 0;
+			else 
+			{
+				winningCellsIds.clear();
+				rowRepeats = 0;
+			}
 
 			if (rowRepeats == repeatsThreshold)
 			{
 				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
+			cellId += gridSize_;
 		}
 	}
 
@@ -221,24 +235,31 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		{
 			cellId = colOffset;
 		}
+		winningCellsIds.clear();
 		diagRepeats = 0;
 		while (cellId % gridSize_ != 0)
 		{
 			auto currentCell = getCellStatus(cellId);
-			cellId += gridSize_ - 1;
-			if (cellId >= gridSize_ * gridSize_) break;
-			auto nextCell = getCellStatus(cellId);
+			if (cellId + (gridSize_ - 1) >= gridSize_ * gridSize_) break;
+			auto nextCell = getCellStatus(cellId + (gridSize_ - 1));
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
+				winningCellsIds.push_back(cellId);
+				if(diagRepeats == 0) winningCellsIds.push_back(cellId + (gridSize_ - 1));
 				diagRepeats += diagRepeats == 0 ? 2 : 1;
 			}
-			else diagRepeats = 0;
+			else
+			{
+				winningCellsIds.clear();
+				diagRepeats = 0;
+			}
 
 			if (diagRepeats == repeatsThreshold)
 			{
 				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
+			cellId += gridSize_ - 1;
 		}
 	}
 	for (int colOffset = gridSize_ - repeatsThreshold; colOffset >= repeatsThreshold - gridSize_; --colOffset)
@@ -255,26 +276,34 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		{
 			cellId = colOffset;
 		}
+		winningCellsIds.clear();
 		diagRepeats = 0;
 		do
 		{
 			auto currentCell = getCellStatus(cellId);
-			cellId += gridSize_ + 1;
-			if (cellId >= gridSize_ * gridSize_) break;
-			auto nextCell = getCellStatus(cellId);
+			if (cellId + (gridSize_ + 1) >= gridSize_ * gridSize_) break;
+			auto nextCell = getCellStatus(cellId + (gridSize_ + 1));
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
+				winningCellsIds.push_back(cellId);
+				if (diagRepeats == 0) winningCellsIds.push_back(cellId + (gridSize_ + 1));
 				diagRepeats += diagRepeats == 0 ? 2 : 1;
 			}
-			else diagRepeats = 0;
+			else 
+			{
+				diagRepeats = 0;
+			}
 
 			if (diagRepeats == repeatsThreshold)
 			{
 				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
 			}
+			cellId += gridSize_ + 1;
 		} while (cellId % (gridSize_ - 1) != 0 || (cellId + gridSize_) < (gridSize_ * gridSize_));
 	}
+	winningCellsIds.clear();
+
 	if (stepCount_ == gridSize_ * gridSize_)
 	{
 		return GameResult::draw;

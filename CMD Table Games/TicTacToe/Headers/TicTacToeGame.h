@@ -31,6 +31,7 @@ private:
 private:
 	std::vector<CellStatus> gameGridStats_;
 	std::vector<SMALL_RECT> gameGridCoords_;
+	std::vector<int> winningCellsIds;
 
 	int gridSize_{};
 	int gridSizeWidthMultiplier_{};
