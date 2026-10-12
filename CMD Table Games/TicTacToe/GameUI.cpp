@@ -76,11 +76,11 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			}
 			else if (game.gameResult_ == TicTacToe::GameResult::lose)
 			{
-				std::cout << "Проигрыш!";
+				std::cout << (game.bot.mode_ != Bot::Modes::off ? "Проигрыш" : "Победил игрок 2");
 			}
 			else if (game.gameResult_ == TicTacToe::GameResult::win)
 			{
-				std::cout << "Победа!";
+				std::cout << (game.bot.mode_ != Bot::Modes::off ? "Победа" : "Победил игрок 1");
 			}
 			std::cout << "\033[K | Раунд: " << game.roundCount_;
 			if(game.bot.mode_ != Bot::Modes::off)
