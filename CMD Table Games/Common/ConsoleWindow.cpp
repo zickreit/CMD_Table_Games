@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <exception>
-#include "ConsoleWindow.h";
+#include "Headers/ConsoleWindow.h";
 
 ConsoleWindow::ConsoleWindow(int width, int height, const std::wstring& title)
 : width_(width), height_(height), title_(title),

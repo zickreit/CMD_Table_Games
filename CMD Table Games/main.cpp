@@ -7,6 +7,7 @@
 #include <iostream>
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
+#include <vector>
 #include <Windows.h>
 #include "TicTacToe/Headers/TicTacToeGame.h"
 #include "Common/Headers/ConsoleWindow.h"
@@ -19,13 +20,12 @@ int main(int argc, char* argv[]) {
 
 	ConsoleWindow cw(70, 50, L"Меню");
 	std::cout << "\033[?25l\n";
+	MenuUI menu;
+	MenuInteraction mi;
 
 	while (true)
 	{
 		cw.setCursorPos(0, 0);
-		MenuUI menu;
-		MenuInteraction mi;
-		
 		mi.mouseEventWaiting(cw, menu.drawMenu(cw));
 	}
 }

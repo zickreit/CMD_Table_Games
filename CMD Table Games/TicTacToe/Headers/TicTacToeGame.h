@@ -9,7 +9,7 @@ class TicTacToe : public ConsoleWindow {
 	friend class GameUI;
 	friend class GridUI;
 	friend class OtherUI;
-	friend class MouseInterction;
+	friend class MouseInteraction;
 	friend class Bot;
 private:
 	enum class CellStatus {
@@ -26,7 +26,7 @@ private:
 	};
 private:
 	GameUI gameUI{};
-	MouseInterction mouseInter;
+	MouseInteraction mouseInter;
 	Bot bot;
 private:
 	std::vector<CellStatus> gameGridStats_;

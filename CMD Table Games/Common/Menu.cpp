@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include "Headers/Menu.h"
+#include "Headers/Button.h"
 #include "Headers/ConsoleWindow.h"
 
 MenuUI::MenuUI() {
@@ -10,11 +11,13 @@ MenuUI::MenuUI() {
 	buttons_.push_back(Button("Выход"));
 }
 
-void MenuUI::drawMenu(ConsoleWindow& cw) {
-	for (auto button : buttons_)
+std::vector<Button>& MenuUI::drawMenu(ConsoleWindow& cw) {
+	HANDLE hOutput = cw.getHandleOutput();
+	for (auto& button : buttons_)
 	{
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
-		GetConsoleScreenBufferInfo(cw.getHandleOutput(), &csbi);
+		GetConsoleScreenBufferInfo(hOutput, &csbi);
 		std::cout << button.drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << '\n';
 	}
+	return buttons_;
 }

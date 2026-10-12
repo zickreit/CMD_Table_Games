@@ -39,10 +39,10 @@ public:
 	std::vector<Button>& drawUI(TicTacToe& game);
 };
 
-class MouseInterction {
+class MouseInteraction {
 	friend class TicTacToe;
 private:
-	MouseInterction() = default;
+	MouseInteraction() = default;
 public:
 	bool mouseEventWaiting(TicTacToe& game, std::vector<Button>& buttons);
 	int getButtonId(const std::vector<Button>& buttons, short x, short y);

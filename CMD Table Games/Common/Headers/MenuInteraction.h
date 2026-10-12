@@ -6,5 +6,6 @@
 
 class MenuInteraction {
 public:
-	bool mouseEventWaiting(ConsoleWindow& cw, const std::vector<Button>& buttons);
+	bool mouseEventWaiting(ConsoleWindow& cw, std::vector<Button>& buttons);
+	int getButtonId(const std::vector<Button>& buttons, SHORT x, SHORT y);
 };

@@ -9,5 +9,5 @@ private:
 	std::vector<Button> buttons_;
 public:
 	MenuUI();
-	std::vector<Button> drawMenu(ConsoleWindow& cw);
+	std::vector<Button>& drawMenu(ConsoleWindow& cw);
 };

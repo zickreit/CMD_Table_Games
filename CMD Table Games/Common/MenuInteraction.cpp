@@ -2,10 +2,11 @@
 #include <thread>
 #include <chrono>
 #include "Headers/MenuInteraction.h"
+#include "Headers/Button.h"
 #include "Headers/ConsoleWindow.h"
 
 
-bool mouseEventWaiting(ConsoleWindow& cw, std::vector<Button>&& buttons) {
+bool MenuInteraction::mouseEventWaiting(ConsoleWindow& cw, std::vector<Button>& buttons) {
 	HANDLE hInput = cw.getHandleInput();
 	INPUT_RECORD inputBufferRecord;
 	DWORD numRead;
@@ -72,10 +73,23 @@ bool mouseEventWaiting(ConsoleWindow& cw, std::vector<Button>&& buttons) {
 		}
 		else if (inputBufferRecord.EventType == WINDOW_BUFFER_SIZE_EVENT)
 		{
-			game.clearScreen();
+			cw.clearScreen();
 			break;
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 	return false;
+}
+
+int MenuInteraction::getButtonId(const std::vector<Button>& buttons, SHORT x, SHORT y) {
+	for (int i{}; i < buttons.size(); ++i)
+	{
+		if (buttons.at(i).isDrawed() == false) continue;
+		if (x >= buttons.at(i).getCoordX() && x < (buttons.at(i).getCoordX() + buttons.at(i).getSizeX()) &&
+			y >= buttons.at(i).getCoordY() && y <= (buttons.at(i).getCoordY() + buttons.at(i).getSizeY()))
+		{
+			return i;
+		}
+	}
+	return -1;
 }

@@ -7,7 +7,7 @@
 #include "Headers/TicTacToeModules.h"
 #include "Common/Headers/Button.h"
 
-bool MouseInterction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& buttons) {
+bool MouseInteraction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& buttons) {
 	HANDLE hInput = game.getHandleInput();
 	INPUT_RECORD inputBufferRecord;
 	DWORD numRead;
@@ -124,7 +124,7 @@ bool MouseInterction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& bu
 	return false;
 }
 
-int MouseInterction::getButtonId(const std::vector<Button>& buttons, SHORT x, SHORT y) {
+int MouseInteraction::getButtonId(const std::vector<Button>& buttons, SHORT x, SHORT y) {
 	for (int i{}; i < buttons.size(); ++i)
 	{
 		if (buttons.at(i).isDrawed() == false) continue;
@@ -138,7 +138,7 @@ int MouseInterction::getButtonId(const std::vector<Button>& buttons, SHORT x, SH
 }
 
 
-bool MouseInterction::isMouseOnCell(TicTacToe& game, SHORT x, SHORT y) {
+bool MouseInteraction::isMouseOnCell(TicTacToe& game, SHORT x, SHORT y) {
 	for (auto coords : game.gameGridCoords_)
 	{
 		if (x >= coords.Left && y >= coords.Top && x <= coords.Right && y <= coords.Bottom)
