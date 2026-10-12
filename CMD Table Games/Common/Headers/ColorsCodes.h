@@ -7,5 +7,6 @@ namespace ColorCodes {
 	const std::string darkGreyInversed = "\033[48;5;244m\033[38;5;232m";
 	const std::string grey = "\033[38;5;244m";
 	const std::string dim = "\033[2m";
+	const std::string greenGrayBack = "\033[48;5;235m\033[38;5;71m";
 	const std::string reset = "\033[0m";
 }
