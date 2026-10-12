@@ -175,7 +175,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 			if (colRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			++cellId;
 		}
@@ -201,7 +201,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 			if (rowRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 		}
 	}
@@ -237,7 +237,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 			if (diagRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 		}
 	}
