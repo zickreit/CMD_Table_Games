@@ -26,6 +26,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	case 0:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		game.setRestartRequirement(true);
+		game.setNewGame(true);
 		buttons_.at(0).setButtonState(Button::State::noInteraction);
 		break;
 	case 1:
@@ -126,7 +127,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 }
 
 void OtherUI::restartGameWithZeroing(TicTacToe& game) {
-	game.roundCount_ = 0;
+	game.roundCount_ = 1;
 	game.scoreBot_ = 0;
 	game.scorePlayer_ = 0;
 	game.scoreSecondPlayer_ = 0;

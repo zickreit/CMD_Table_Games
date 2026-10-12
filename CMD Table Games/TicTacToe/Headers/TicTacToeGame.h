@@ -39,11 +39,13 @@ private:
 
 	bool isExitRequired_{};
 	bool isRestartRequired_{};
+	bool isNewGame_{};
+
 	int stepCount_{};
 	int focusedCellId_ = -1;
 
-	bool isPlayerTurn{};
-	bool isPlayerFirst{};
+	bool isPlayerTurn_{};
+	bool isPlayerFirst_{};
 	GameResult gameResult_{};
 
 	int scorePlayer_{};
@@ -59,6 +61,7 @@ public:
 	CellStatus getCellStatus(int id);
 	void setCell(CellStatus cs, int id);
 	void setExitRequirement(bool state) { isExitRequired_ = state; }
+	void setNewGame(bool state) { isNewGame_ = state; }
 	void setRestartRequirement(bool state) { isRestartRequired_ = state; }
 	void setGridSize(int newSize);
 

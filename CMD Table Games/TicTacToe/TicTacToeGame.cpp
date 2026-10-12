@@ -50,8 +50,9 @@ void TicTacToe::startRound() {
 	for(;;)
 	{
 		if (isExitRequired_) break;
-		if (isRestartRequired_ == false || gameResult_ != GameResult::notDefined)
+		if (isNewGame_ && gameResult_ != GameResult::notDefined)
 		{
+			isNewGame_ = false;
 			++roundCount_;
 			if (gameResult_ == GameResult::win)
 			{
@@ -69,6 +70,7 @@ void TicTacToe::startRound() {
 				}
 			}
 		}
+		if (!isRestartRequired_) roundCount_ = 1;
 		focusedCellId_ = -1;
 		isRestartRequired_ = false;
 		gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), { 0, 0, 0, 0 });
@@ -81,8 +83,8 @@ void TicTacToe::startRound() {
 		static std::random_device rd;
 		static std::mt19937 mt(rd());
 		std::uniform_int_distribution<int> distrib(0, 1);
-		isPlayerFirst = static_cast<bool>(distrib(mt));
-		isPlayerTurn = isPlayerFirst;
+		isPlayerFirst_ = static_cast<bool>(distrib(mt));
+		isPlayerTurn_ = isPlayerFirst_;
 		//bot.mode_ = Bot::Modes::easy;
 		for (; isRestartRequired_ == false;)
 		{
@@ -95,12 +97,12 @@ void TicTacToe::startRound() {
 				clearScreen();
 				break;
 			}
-			if (isPlayerTurn)
+			if (isPlayerTurn_)
 			{
 				if (mouseInter.mouseEventWaiting(*this, buttons))
 				{
 					gameResult_ = checkGameResult();
-					isPlayerTurn = false;
+					isPlayerTurn_ = false;
 				}
 			}
 			else
@@ -109,12 +111,12 @@ void TicTacToe::startRound() {
 				{
 					bot.makeMove(*this);
 					gameResult_ = checkGameResult();
-					isPlayerTurn = true;
+					isPlayerTurn_ = true;
 				}
 				else if (mouseInter.mouseEventWaiting(*this, buttons))
 				{
 					gameResult_ = checkGameResult();
-					isPlayerTurn = true;
+					isPlayerTurn_ = true;
 				}
 			}
 		}
@@ -183,7 +185,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 			if (colRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
+				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			++cellId;
 		}
@@ -215,7 +217,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 			if (rowRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
+				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			cellId += gridSize_;
 		}
@@ -258,7 +260,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 			if (diagRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
+				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			cellId += gridSize_ - 1;
 		}
@@ -298,7 +300,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 
 			if (diagRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst && stepCount_ % 2 != 0 ? GameResult::win : GameResult::lose;
+				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			cellId += gridSize_ + 1;
 		} while (cellId % (gridSize_ - 1) != 0 || (cellId + gridSize_) < (gridSize_ * gridSize_));
