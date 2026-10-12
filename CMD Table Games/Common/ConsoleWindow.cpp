@@ -11,16 +11,6 @@ hInput_(GetStdHandle(STD_INPUT_HANDLE)), hOutput_(GetStdHandle(STD_OUTPUT_HANDLE
 	{
 		throw std::runtime_error("Критическая ошибка: Не удалось найти окно консоли!\n");
 	}
-
-	if(!isValidSize(width_, height_))
-	{
-		std::cerr << "Неверное значение для размеров окна!\nЗначения возвращены к стандартным\n";
-		width_ = 100;
-		height_ = 60;
-	}
-
-	SetConsoleTitleW(title_.c_str());
-
 	changingConsoleProperties();
 }
 
@@ -50,6 +40,16 @@ bool ConsoleWindow::isValidSize(int width, int height) {
 }
 
 void ConsoleWindow::changingConsoleProperties() {
+
+	if (!isValidSize(width_, height_))
+	{
+		std::cerr << "Неверное значение для размеров окна!\nЗначения возвращены к стандартным\n";
+		width_ = 100;
+		height_ = 60;
+	}
+
+	SetConsoleTitleW(title_.c_str());
+
 	LONG style = GetWindowLong(hWnd_, GWL_STYLE);
 	style &= ~WS_THICKFRAME; // отключает изменение размера окна
 	style &= ~WS_MAXIMIZEBOX; // отключает кнопку разворачивания окна
@@ -102,6 +102,16 @@ int ConsoleWindow::getConsoleHeight() {
 		return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 	}
 	else return 0;
+}
+
+bool ConsoleWindow::setConsoleSizes(int width, int height) {
+	width_ = width;
+	height_ = height;
+	changingConsoleProperties();
+}
+void ConsoleWindow::setConsoleTitle(const std::wstring& title) {
+	title_ = title;
+	changingConsoleProperties();
 }
 
 void ConsoleWindow::setCursorPos(short x, short y) {

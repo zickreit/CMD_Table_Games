@@ -28,5 +28,7 @@ public:
 	int getConsoleWidth();
 	int getConsoleHeight();
 
+	bool setConsoleSizes(int width, int height);
+	void setConsoleTitle(const std::wstring& title);
 	void setCursorPos(short x, short y);
 };
