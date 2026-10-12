@@ -86,13 +86,17 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			if(game.bot.mode_ != Bot::Modes::off)
 			{
 				std::cout << "\033[K";
-				std::cout << " | Счёт игрока: " << game.scorePlayer_ << " | Счёт бота: " << game.scoreBot_ << '\n';
+				int realPlayerScore = (game.gameResult_ == TicTacToe::GameResult::win ? game.scorePlayer_ + 1 : game.scorePlayer_);
+				int realBotScore = (game.gameResult_ == TicTacToe::GameResult::lose ? game.scoreBot_ + 1 : game.scoreBot_);
+				std::cout << " | Счёт игрока: " << realPlayerScore << " | Счёт бота: " << realBotScore << '\n';
 				std::cout << (game.isPlayerTurn ? "Ход игрока\033[K\n" : "Ход бота\033[K\n");
 			}
 			else
 			{
 				std::cout << "\033[K";
-				std::cout << " | Счёт игрока 1: " << game.scorePlayer_ << " | Счёт игрока 2: " << game.scoreSecondPlayer_ << '\n';
+				int realPlayer1Score = (game.gameResult_ == TicTacToe::GameResult::win ? game.scorePlayer_ + 1 : game.scorePlayer_);
+				int realPlayer2Score = (game.gameResult_ == TicTacToe::GameResult::lose ? game.scoreSecondPlayer_ + 1 : game.scoreSecondPlayer_);
+				std::cout << " | Счёт игрока 1: " << realPlayer1Score << " | Счёт игрока 2: " << realPlayer2Score << '\n';
 				std::cout << (game.isPlayerTurn ? "Ход игрока 1\033[K\n" : "Ход игрока 2\033[K\n");
 			}
 			CONSOLE_SCREEN_BUFFER_INFO csbi;
