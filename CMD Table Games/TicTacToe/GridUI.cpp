@@ -201,8 +201,14 @@ std::string GridUI::getCrossChar(TicTacToe& game, int cellID, int colCount, int 
 
 			const bool isCenterX = (x == W / 2 - 1) || (x == W / 2);
 			const bool isCenterY = (y == H / 2 - 1) || (y == H / 2);
-			if (isCenterX && isCenterY)
+			if (isCenterX && isCenterY && (d < 0.02 || d > 0.04))
+			{
 				idx = (std::min)(idx + 2, N);
+			}
+			else if (W == 8 && H == 4)
+			{
+				idx = std::clamp(idx - 3, 0, N);
+			}
 
 			const bool mainIsCloser = (dMain <= dAnti);
 			const bool lowerSide = mainIsCloser ? (sy > sx): (sx + sy > 1.0);
