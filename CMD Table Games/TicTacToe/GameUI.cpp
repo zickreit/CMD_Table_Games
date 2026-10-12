@@ -23,19 +23,19 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 	for (;;)
 	{
 		std::stringstream coutBuffer;
-		if (game.getConsoleWidth() >= 65)
+		if (game.getConsoleWidth() >= 66)
 		{
-			coutBuffer << std::string((game.getConsoleWidth() - 65) / 2, ' ') << "█▄▀ █▀█ █▀▀ █▀▀ ▀█▀ █ ▄█ █▄▀ █ ▄█  ▄▄  █ █ █▀█  █▀█ █ ▄█ █▄▀ █ ▄█" << '\n';
-			coutBuffer << std::string((game.getConsoleWidth() - 65) / 2, ' ') << "█ █ █▀▀ ██▄ █▄▄  █  █▀ █ █ █ █▀ █      █▀█ █▄█ ▄█ █ █▀ █ █ █ █▀ █" << '\n';
+			coutBuffer << std::string((game.getConsoleWidth() - 66) / 2, ' ') << "█▄▀ █▀█ █▀▀ █▀▀ ▀█▀ █ ▄█ █▄▀ █ ▄█  ▄▄▄  █ █ █▀█  █▀█ █ ▄█ █▄▀ █ ▄█" << '\n';
+			coutBuffer << std::string((game.getConsoleWidth() - 66) / 2, ' ') << "█ █ █▀▀ ██▄ █▄▄  █  █▀ █ █ █ █▀ █       █▀█ █▄█ ▄█ █ █▀ █ █ █ █▀ █" << '\n';
 			coutBuffer << '\n';
 		}
 		else if (game.getConsoleWidth() >= 17)
 		{
-			coutBuffer << "Крестики - Нолики\n";
+			coutBuffer << std::string((game.getConsoleWidth() - 17) / 2, ' ') << "КРЕСТИКИ - НОЛИКИ\n";
 		}
 		else if (game.getConsoleWidth() >= 8)
 		{
-			coutBuffer << "Крестики\nНолики\n";
+			coutBuffer << std::string((game.getConsoleWidth() - 8) / 2, ' ') << "КРЕСТИКИ\nНОЛИКИ\n";
 		}
 		int existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
 
@@ -43,13 +43,13 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 		{
 			int centeredSmallOffsetX = (game.getConsoleWidth() - (game.gridSize_ * 4 - 1)) / 2;
 			//int centeredSmallOffsetY = (getConsoleHeight() - (gridSize_ * 2 - 1)) / 2;
-			coutBuffer << gridUI.getSmallGridUI(game, centeredSmallOffsetX, 1, existingLinesInBuffer);
+			coutBuffer << gridUI.getSmallGridUI(game, centeredSmallOffsetX, 0, existingLinesInBuffer);
 		}
 		else
 		{
 			int centeredBigOffsetX = (game.getConsoleWidth() - (game.gridSize_ * game.gridSizeWidthMultiplier_ + (game.gridSize_ - 1))) / 2;
 			//int centeredBigOffsetY = (getConsoleHeight() - (gridSize_ * gridSizeHeightMultiplier_ + (gridSize_ - 1))) / 2;
-			coutBuffer << gridUI.getBigGridUI(game, centeredBigOffsetX, 1, existingLinesInBuffer);
+			coutBuffer << gridUI.getBigGridUI(game, centeredBigOffsetX, 0, existingLinesInBuffer);
 		}
 		existingLinesInBuffer = std::ranges::count(coutBuffer.str(), '\n');
 		if (existingLinesInBuffer >= game.getConsoleHeight() || game.gridSize_ * game.gridSizeWidthMultiplier_ + (game.gridSize_ - 1) >= game.getConsoleWidth())

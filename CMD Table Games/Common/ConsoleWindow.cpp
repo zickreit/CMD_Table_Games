@@ -104,11 +104,12 @@ int ConsoleWindow::getConsoleHeight() {
 	else return 0;
 }
 
-bool ConsoleWindow::setConsoleSizes(int width, int height) {
+void ConsoleWindow::setConsoleSizes(int width, int height) {
 	width_ = width;
 	height_ = height;
 	changingConsoleProperties();
 }
+
 void ConsoleWindow::setConsoleTitle(const std::wstring& title) {
 	title_ = title;
 	changingConsoleProperties();

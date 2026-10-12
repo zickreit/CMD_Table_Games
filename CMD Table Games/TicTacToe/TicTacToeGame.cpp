@@ -31,7 +31,7 @@
 #include "Common/Headers/ConsoleWindow.h"
 
 TicTacToe::TicTacToe(int gameGridSize)
-	: ConsoleWindow::ConsoleWindow(70, 50, L"Крестики-Нолики") {
+	: ConsoleWindow::ConsoleWindow(66, 45, L"Крестики-Нолики") {
 	gridSize_ = std::clamp(gameGridSize, 3, getConsoleWidth() / 4);
 	gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), {0, 0, 0, 0});
 	gameGridStats_.assign((size_t)(gridSize_ * gridSize_), CellStatus(CellStatus::empty));

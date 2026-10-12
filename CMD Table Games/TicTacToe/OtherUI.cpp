@@ -95,6 +95,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	case 7:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(6).setSwitchState(0);
+		game.setConsoleSizes(66, 45);
 		game.setGridSize(3);
 		game.scoreBot_ = 0;
 		game.scorePlayer_ = 0;
@@ -104,6 +105,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	case 8:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(6).setSwitchState(0);
+		game.setConsoleSizes(66, 45);
 		game.setGridSize(5);
 		game.scoreBot_ = 0;
 		game.scorePlayer_ = 0;
@@ -113,6 +115,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	case 9:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(6).setSwitchState(0);
+		game.setConsoleSizes(91, 60);
 		game.setGridSize(10);
 		game.scoreBot_ = 0;
 		game.scorePlayer_ = 0;
@@ -122,6 +125,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	case 10:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(6).setSwitchState(0);
+		game.setConsoleSizes(66, 45);
 		game.setGridSize(15);
 		game.scoreBot_ = 0;
 		game.scorePlayer_ = 0;
