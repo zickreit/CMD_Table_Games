@@ -13,6 +13,7 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 	xOffset = (std::max)(xOffset, 0);
 	gridBufferStr += std::string(yOffset, '\n');
 	yOffset += existingLinesNum;
+	int cellId{};
 	for (int i{}; i < game.gridSize_; ++i)
 	{
 		int cellCoordX = xOffset;
@@ -31,21 +32,26 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 			{
 				if (game.stepCount_ % 2 == 0)
 				{
-					gridBufferStr += colorizeChar(" ╳ ", ColorCodes::red);
+					const auto& color = (std::ranges::find(game.winningCellsIds, cellId) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::red);
+					gridBufferStr += colorizeChar(" ╳ ", color);
 				}
 				else
 				{
-					gridBufferStr += colorizeChar(" O ", ColorCodes::blue);
+					const auto& color = (std::ranges::find(game.winningCellsIds, cellId) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::blue);
+					gridBufferStr += colorizeChar(" O ", color);
 				}
 			}
 			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::cross)
 			{
-				gridBufferStr += colorizeChar(" ╳ ", ColorCodes::red);
+				const auto& color = (std::ranges::find(game.winningCellsIds, cellId) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::red);
+				gridBufferStr += colorizeChar(" ╳ ", color);
 			}
 			else if (game.gameGridStats_.at(k) == TicTacToe::CellStatus::zero)
 			{
-				gridBufferStr += colorizeChar(" O ", ColorCodes::blue);
+				const auto& color = (std::ranges::find(game.winningCellsIds, cellId) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::blue);
+				gridBufferStr += colorizeChar(" O ", color);
 			}
+			++cellId;
 			gridBufferStr += (k == (i + 1) * game.gridSize_ - 1 ? "" : "│");
 			cellCoordX += 4;
 		}
@@ -121,20 +127,24 @@ std::string GridUI::getBigGridUI(TicTacToe& game, int xOffset, int yOffset, int 
 				{
 					if (game.stepCount_ % 2 == 0)
 					{
-						gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), ColorCodes::red);
+						const auto& color = (std::ranges::find(game.winningCellsIds, accurateCellCount) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::red);
+						gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), color);
 					}
 					else
 					{
-						gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), ColorCodes::blue);
+						const auto& color = (std::ranges::find(game.winningCellsIds, accurateCellCount) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::blue);
+						gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), color);
 					}
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::cross)
 				{
-					gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), ColorCodes::red);
+					const auto& color = (std::ranges::find(game.winningCellsIds, accurateCellCount) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::red);
+					gridBufferStr += colorizeChar(getCrossChar(game, accurateCellCount, charColCount, charRowCount), color);
 				}
 				else if (game.gameGridStats_.at(accurateCellCount) == TicTacToe::CellStatus::zero)
 				{
-					gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), ColorCodes::blue);
+					const auto& color = (std::ranges::find(game.winningCellsIds, accurateCellCount) != game.winningCellsIds.end() ? ColorCodes::greenGrayBack : ColorCodes::blue);
+					gridBufferStr += colorizeChar(getZeroChar(game, accurateCellCount, charColCount, i), color);
 				}
 				++charColCount;
 			}

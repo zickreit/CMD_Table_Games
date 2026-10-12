@@ -73,6 +73,7 @@ void TicTacToe::startRound() {
 		isRestartRequired_ = false;
 		gameGridCoords_.assign((size_t)(gridSize_ * gridSize_), { 0, 0, 0, 0 });
 		gameGridStats_.assign((size_t)(gridSize_ * gridSize_), CellStatus(CellStatus::empty));
+		winningCellsIds.clear();
 		static std::string hideCursor = "\033[?25l\n";
 		std::cout << hideCursor;
 		stepCount_ = 0;
@@ -170,8 +171,8 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 			if (currentColCell == nextColCell &&
 				(currentColCell == CellStatus::cross || currentColCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId);
-				if (colRepeats == 0) winningCellsIds.push_back(cellId + 1);
+				winningCellsIds.push_back(cellId + 1);
+				if (colRepeats == 0) winningCellsIds.push_back(cellId);
 				colRepeats += colRepeats == 0 ? 2 : 1;
 			}
 			else 
@@ -202,8 +203,8 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 			if (currentRowCell == nextRowCell &&
 				(currentRowCell == CellStatus::cross || currentRowCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId);
-				if (rowRepeats == 0) winningCellsIds.push_back(cellId + gridSize_);
+				winningCellsIds.push_back(cellId + gridSize_);
+				if (rowRepeats == 0) winningCellsIds.push_back(cellId);
 				rowRepeats += rowRepeats == 0 ? 2 : 1;
 			}
 			else 
@@ -245,8 +246,8 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId);
-				if(diagRepeats == 0) winningCellsIds.push_back(cellId + (gridSize_ - 1));
+				winningCellsIds.push_back(cellId + (gridSize_ - 1));
+				if(diagRepeats == 0) winningCellsIds.push_back(cellId);
 				diagRepeats += diagRepeats == 0 ? 2 : 1;
 			}
 			else
@@ -286,8 +287,8 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId);
-				if (diagRepeats == 0) winningCellsIds.push_back(cellId + (gridSize_ + 1));
+				winningCellsIds.push_back(cellId + (gridSize_ + 1));
+				if (diagRepeats == 0) winningCellsIds.push_back(cellId);
 				diagRepeats += diagRepeats == 0 ? 2 : 1;
 			}
 			else 
