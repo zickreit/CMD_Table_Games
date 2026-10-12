@@ -13,6 +13,7 @@ OtherUI::OtherUI() {
 	buttons_.push_back(Button("(5 x 5)"));
 	buttons_.push_back(Button("(10 x 10)"));
 	buttons_.push_back(Button("(15 x 15)"));
+	buttons_.push_back(Button("В меню"));
 }
 
 int OtherUI::getButtonId(short x, short y) {
@@ -126,6 +127,12 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		game.scorePlayer_ = 0;
 		game.setRestartRequirement(true);
 		buttons_.at(10).setButtonState(Button::State::noInteraction);
+		break;
+	case 11:
+		if (buttons_.at(id).getState() != Button::State::pressed) break;
+		game.setExitRequirement(true);
+		game.setRestartRequirement(true);
+		buttons_.at(id).setButtonState(Button::State::noInteraction);
 		break;
 	}
 

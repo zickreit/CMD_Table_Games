@@ -49,6 +49,7 @@ TicTacToe::TicTacToe(int gameGridSize)
 void TicTacToe::startRound() {
 	for(;;)
 	{
+		if (isExitRequired_) break;
 		if (isRestartRequired_ == false || gameResult_ != GameResult::notDefined)
 		{
 			++roundCount_;

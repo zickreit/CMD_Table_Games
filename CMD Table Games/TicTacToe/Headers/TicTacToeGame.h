@@ -36,6 +36,7 @@ private:
 	int gridSizeWidthMultiplier_{};
 	int gridSizeHeightMultiplier_{};
 
+	bool isExitRequired_{};
 	bool isRestartRequired_{};
 	int stepCount_{};
 	int focusedCellId_ = -1;
@@ -56,6 +57,7 @@ public:
 	int getCell(SHORT x, SHORT y);
 	CellStatus getCellStatus(int id);
 	void setCell(CellStatus cs, int id);
+	void setExitRequirement(bool state) { isExitRequired_ = state; }
 	void setRestartRequirement(bool state) { isRestartRequired_ = state; }
 	void setGridSize(int newSize);
 

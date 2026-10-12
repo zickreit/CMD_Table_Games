@@ -101,7 +101,9 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
 			std::cout << otherUI.buttons_.at(1).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << " | ";
 			GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
-			std::cout << otherUI.buttons_.at(6).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y);
+			std::cout << otherUI.buttons_.at(6).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << " | ";
+			GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
+			std::cout << otherUI.buttons_.at(11).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y);
 			if (otherUI.buttons_.at(1).getSwitchState() == 1)
 			{
 				std::cout << "\n";
