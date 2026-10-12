@@ -13,11 +13,13 @@ MenuUI::MenuUI() {
 
 std::vector<Button>& MenuUI::drawMenu(ConsoleWindow& cw) {
 	HANDLE hOutput = cw.getHandleOutput();
+	std::cout << std::string((cw.getConsoleWidth() - 61) / 2, ' ') << "█ █ ▄▀█ █▀▀ ▀█▀ █▀█  █▀█ █▄▄ █ █ █▄▄ █ █▀▀  █ ▄█ █▀▀ █▀█ █▄▄ █" << '\n';
+	std::cout << std::string((cw.getConsoleWidth() - 61) / 2, ' ') << "█▀█ █▀█ █▄▄  █  █▄█ ▄█ █ █▄█ █▀█ █▄█ █ ██▄  █▀ █ █   █▀▀ █▄█ █" << '\n' << '\n';
 	for (auto& button : buttons_)
 	{
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		GetConsoleScreenBufferInfo(hOutput, &csbi);
-		std::cout << button.drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << '\n';
+		std::cout << button.drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << "            ";
 	}
 	return buttons_;
 }

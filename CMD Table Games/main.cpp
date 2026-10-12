@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 
 	while (1)
 	{
-		ConsoleWindow cw(70, 50, L"Меню");
+		ConsoleWindow cw(70, 20, L"Настольные игры в консоли");
 		std::cout << "\033[?25l\n";
 		MenuUI menu;
 		MenuInteraction mi;
@@ -29,7 +29,8 @@ int main(int argc, char* argv[]) {
 		while (!rebootRequired)
 		{
 			cw.setCursorPos(0, 0);
-			bool isButtonPressed = mi.mouseEventWaiting(cw, menu.drawMenu(cw));
+			auto& buttons = menu.drawMenu(cw);
+			bool isButtonPressed = mi.mouseEventWaiting(cw, buttons);
 			if (!isButtonPressed) continue;
 			int pressedButtonId = menu.getPressedButtonId(cw);
 			switch (pressedButtonId)
