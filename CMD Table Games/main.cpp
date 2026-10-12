@@ -18,15 +18,40 @@ int main(int argc, char* argv[]) {
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	ConsoleWindow cw(70, 50, L"Меню");
-	std::cout << "\033[?25l\n";
-	MenuUI menu;
-	MenuInteraction mi;
-
-	while (true)
+	while (1)
 	{
-		cw.setCursorPos(0, 0);
-		mi.mouseEventWaiting(cw, menu.drawMenu(cw));
+		ConsoleWindow cw(70, 50, L"Меню");
+		std::cout << "\033[?25l\n";
+		MenuUI menu;
+		MenuInteraction mi;
+		bool rebootRequired{};
+
+		while (!rebootRequired)
+		{
+			cw.setCursorPos(0, 0);
+			bool isButtonPressed = mi.mouseEventWaiting(cw, menu.drawMenu(cw));
+			if (!isButtonPressed) continue;
+			int pressedButtonId = menu.getPressedButtonId(cw);
+			switch (pressedButtonId)
+			{
+			case 0:
+				ticTacToe();
+				rebootRequired = true;
+				break;
+			case 1:
+				rebootRequired = true;
+				break;
+			case 2:
+				rebootRequired = true;
+				break;
+			case 3:
+				exit(1);
+				break;
+			default:
+				std::cerr << "Произошла ошибка: нажата неизвестная кнопка!\n";
+				exit(-1);
+			}
+		}
 	}
 }
 #else

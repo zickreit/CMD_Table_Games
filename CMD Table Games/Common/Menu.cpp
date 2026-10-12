@@ -21,3 +21,14 @@ std::vector<Button>& MenuUI::drawMenu(ConsoleWindow& cw) {
 	}
 	return buttons_;
 }
+
+int MenuUI::getPressedButtonId(ConsoleWindow& cw) {
+	for (int i{}; i < buttons_.size(); ++i)
+	{
+		buttons_.at(i).setDrawedState(false);
+		if (buttons_.at(i).getState() == Button::State::pressed)
+		{
+			return i;
+		}
+	}
+}

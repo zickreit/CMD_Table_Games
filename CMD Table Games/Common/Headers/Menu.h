@@ -10,4 +10,5 @@ private:
 public:
 	MenuUI();
 	std::vector<Button>& drawMenu(ConsoleWindow& cw);
+	int getPressedButtonId(ConsoleWindow& cw);
 };

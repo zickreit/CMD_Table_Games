@@ -51,6 +51,7 @@ bool MenuInteraction::mouseEventWaiting(ConsoleWindow& cw, std::vector<Button>& 
 					{
 						buttons.at(id).setSwitchState(1 - buttons.at(id).getSwitchState());
 						buttons.at(id).setButtonState(Button::State::pressed);
+						return true;
 					}
 					else
 					{
@@ -62,6 +63,7 @@ bool MenuInteraction::mouseEventWaiting(ConsoleWindow& cw, std::vector<Button>& 
 					if (isMousePressed)
 					{
 						buttons.at(id).setButtonState(Button::State::pressed);
+						return true;
 					}
 					else
 					{
