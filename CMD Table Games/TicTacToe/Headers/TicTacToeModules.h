@@ -15,6 +15,7 @@ private:
 public:
 	int getButtonId(short x, short y);
 	void implementButtonAction(TicTacToe& game, int id);
+	void restartGameWithZeroing(TicTacToe& game);
 };
 
 class GridUI {

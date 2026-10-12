@@ -46,36 +46,28 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::off);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(2).setButtonState(Button::State::noInteraction);
 		break;
 	case 3:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::easy);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(3).setButtonState(Button::State::noInteraction);
 		break;
 	case 4:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::medium);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(4).setButtonState(Button::State::noInteraction);
 		break;
 	case 5:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
 		game.bot.setMode(Bot::Modes::hard);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(5).setButtonState(Button::State::noInteraction);
 		break;
 	case 6:
@@ -97,9 +89,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		buttons_.at(6).setSwitchState(0);
 		game.setConsoleSizes(66, 45);
 		game.setGridSize(3);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(7).setButtonState(Button::State::noInteraction);
 		break;
 	case 8:
@@ -107,9 +97,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		buttons_.at(6).setSwitchState(0);
 		game.setConsoleSizes(66, 45);
 		game.setGridSize(5);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(8).setButtonState(Button::State::noInteraction);
 		break;
 	case 9:
@@ -117,9 +105,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		buttons_.at(6).setSwitchState(0);
 		game.setConsoleSizes(91, 60);
 		game.setGridSize(10);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(9).setButtonState(Button::State::noInteraction);
 		break;
 	case 10:
@@ -127,9 +113,7 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		buttons_.at(6).setSwitchState(0);
 		game.setConsoleSizes(66, 45);
 		game.setGridSize(15);
-		game.scoreBot_ = 0;
-		game.scorePlayer_ = 0;
-		game.setRestartRequirement(true);
+		restartGameWithZeroing(game);
 		buttons_.at(10).setButtonState(Button::State::noInteraction);
 		break;
 	case 11:
@@ -139,5 +123,12 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		buttons_.at(id).setButtonState(Button::State::noInteraction);
 		break;
 	}
+}
 
+void OtherUI::restartGameWithZeroing(TicTacToe& game) {
+	game.roundCount_ = 0;
+	game.scoreBot_ = 0;
+	game.scorePlayer_ = 0;
+	game.scoreSecondPlayer_ = 0;
+	game.setRestartRequirement(true);
 }
