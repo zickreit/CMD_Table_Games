@@ -88,7 +88,7 @@ void TicTacToe::startRound() {
 		{
 			setCursorPos(0, 0); // убирает мерцание, но нужно следить за некоторыми моментами
 			//clearScreen(); // мерцает 
-			//system("cls"); // мерцает + медленно
+			//system("cls"); // мерцает + медленно + багает взаимодействие мыши
 			auto& buttons = gameUI.drawUI(*this);
 			if (isRestartRequired_) 
 			{

@@ -55,7 +55,7 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 			gridBufferStr += (k == (i + 1) * game.gridSize_ - 1 ? "" : "│");
 			cellCoordX += 4;
 		}
-		gridBufferStr += "\n";
+		gridBufferStr += "\033[K\n";
 		if (i == game.gridSize_ - 1) continue;
 		gridBufferStr += std::string(xOffset, ' ');
 		for (int j = i * game.gridSize_; j < (i + 1) * game.gridSize_; ++j)
@@ -63,7 +63,7 @@ std::string GridUI::getSmallGridUI(TicTacToe& game, int xOffset, int yOffset, in
 			gridBufferStr += "───";
 			gridBufferStr += (j == (i + 1) * game.gridSize_ - 1 ? "" : "┼");
 		}
-		gridBufferStr += "\n";
+		gridBufferStr += "\033[K\n";
 	}
 	return gridBufferStr;
 }

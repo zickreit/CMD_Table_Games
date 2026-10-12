@@ -74,16 +74,7 @@ void ConsoleWindow::changingConsoleProperties() {
 }
 
 void ConsoleWindow::clearScreen() {
-	COORD coordScreen = { 0, 0 };
-	DWORD cCharsWritten;
-	DWORD dwConSize;
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-	if (!GetConsoleScreenBufferInfo(hOutput_, &csbi)) return;
-	dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
-
-	FillConsoleOutputCharacter(hOutput_, (TCHAR)' ', dwConSize, coordScreen, &cCharsWritten);
-	SetConsoleCursorPosition(hOutput_, coordScreen);
+	std::cout << "\033[2J\033[H";
 }
 
 int ConsoleWindow::getConsoleWidth() {
