@@ -53,6 +53,14 @@ public:
 class Bot {
 	friend class GameUI;
 	friend class TicTacToe;
+	struct CombinationInfo {
+		std::vector<int> cellsId;
+		int score{};
+		int movesNum{};
+		CombinationInfo() = default;
+		CombinationInfo(std::vector<int> cells)
+		: cellsId(cells) {}
+	};
 public:
 	enum class Modes {
 		hard,
