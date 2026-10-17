@@ -41,11 +41,13 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 	//	 * итоговый счёт отдаём клетке родителю
 	//	- находим клетку с большим счётом и выводим её
 	int simNum				= 200;
+	int forwardMovesNum		= 3;
+
 	int mainCellsNum		= game.gridSize_ * game.gridSize_;
 	int completedMoves		= game.stepCount_;
-	int forwardMovesNum		= (std::min)(3, mainCellsNum - completedMoves - 1);
+	int forwardMovesNumReal	= (std::min)(forwardMovesNum, mainCellsNum - completedMoves - 1);
 	int possibleCombsNum	= 1;
-	for (int possibleCells = mainCellsNum - completedMoves - 1; possibleCells > mainCellsNum - completedMoves  - 1 - forwardMovesNum; --possibleCells)
+	for (int possibleCells = mainCellsNum - completedMoves - 1; possibleCells > mainCellsNum - completedMoves  - 1 - forwardMovesNumReal; --possibleCells)
 	{
 		possibleCombsNum *= possibleCells;
 	}
@@ -55,53 +57,56 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 		if (game.getCellStatus(cellId) == TicTacToe::CellStatus::cross ||
 			game.getCellStatus(cellId) == TicTacToe::CellStatus::zero) continue;
 		std::vector<CombinationInfo> combsScore(possibleCombsNum);
-		std::vector<int> combCellsId(forwardMovesNum + 1);
+		std::vector<int> combCellsId(forwardMovesNumReal + 1);
 		combCellsId[0] = cellId;
-		int extraCellId{};
-		for (int step{1}; step < forwardMovesNum + 1; ++step)
-		{
-			while (game.getCellStatus(extraCellId) == TicTacToe::CellStatus::cross ||
-				   game.getCellStatus(extraCellId) == TicTacToe::CellStatus::zero ||
-				   extraCellId == cellId)
-			{
-				++extraCellId;
-			}
-			combCellsId[step] = extraCellId++;
-		}
 		bool isNeedBreak{};
-		for(auto& comb : combsScore)
+		for (auto& comb : combsScore)
 		{
-			comb = CombinationInfo(combCellsId);
-			int step = forwardMovesNum;
-			++combCellsId[step];
 			bool isCombFound{};
-			while(!isCombFound)
+			while (!isCombFound)
 			{
 				isCombFound = true;
-				while (combCellsId[step] >= mainCellsNum)
+				for (int tempStep = forwardMovesNumReal; tempStep > 1; --tempStep)
 				{
-					combCellsId[step] = 0;
-					if (step - 1 == 0)
+					while (combCellsId[tempStep] >= mainCellsNum)
 					{
-						isNeedBreak = true;
-						break;
+						combCellsId[tempStep] = 0;
+						if (tempStep - 1 == 0)
+						{
+							isNeedBreak = true;
+							break;
+						}
+						++combCellsId[tempStep - 1];
+						isCombFound = false;
 					}
-					--step;
-					++combCellsId[step];
-					isCombFound = false;
 				}
-				while (game.getCellStatus(combCellsId[step]) == TicTacToe::CellStatus::cross ||
-					   game.getCellStatus(combCellsId[step]) == TicTacToe::CellStatus::zero ||
-					   combCellsId[step] == cellId)
+				for (int tempStep = 1; tempStep <= forwardMovesNumReal && isCombFound; ++tempStep)
 				{
-					++combCellsId[step];
-					isCombFound = false;
+					while (game.getCellStatus(combCellsId[tempStep]) == TicTacToe::CellStatus::cross ||
+							game.getCellStatus(combCellsId[tempStep]) == TicTacToe::CellStatus::zero)
+					{
+						++combCellsId[tempStep];
+						isCombFound = false;
+					}
+					for (int tempId{}; tempId <= forwardMovesNumReal; ++tempId)
+					{
+						if (combCellsId[tempId] == combCellsId[tempStep] && tempId != tempStep)
+						{
+							if(tempStep < tempId)
+								++combCellsId[tempId];
+							else
+								++combCellsId[tempStep];
+							isCombFound = false;
+						}
+					}
 				}
-				
-				if (isNeedBreak) break;
 			}
 			if (isNeedBreak) break;
+			comb = CombinationInfo(combCellsId);
+			++combCellsId[forwardMovesNumReal];
 		}
+		if (isNeedBreak) break;
+
 		for (auto& comb : combsScore)
 		{
 			for (int simCount{}; simCount < simNum; ++simCount)
