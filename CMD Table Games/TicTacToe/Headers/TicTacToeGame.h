@@ -65,7 +65,7 @@ public:
 	void setRestartRequirement(bool state) { isRestartRequired_ = state; }
 	void setGridSize(int newSize);
 
-	GameResult checkGameResult();
+	GameResult checkGameResult(bool isSimulation = false);
 };
 
 void ticTacToe();

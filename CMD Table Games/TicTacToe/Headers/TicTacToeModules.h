@@ -71,6 +71,7 @@ public:
 private:
 	Bot() = default;
 	Modes mode_{};
+	std::vector<TicTacToe::CellStatus> simGridStats_;
 public:
 	void makeMove(TicTacToe& game);
 	int getCellIdEasyMode(TicTacToe& game);
@@ -78,4 +79,5 @@ public:
 	int getCellIdHardMode(TicTacToe& game);
 	Modes getMode() { return mode_; }
 	void setMode(Modes mode) { mode_ = mode; }
+	TicTacToe::CellStatus getSimCellStatus(int id);
 };

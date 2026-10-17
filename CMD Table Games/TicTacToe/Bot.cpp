@@ -117,3 +117,11 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 	}
 	return 0;
 }
+
+TicTacToe::CellStatus Bot::getSimCellStatus(int id) {
+	if (id < 0 || id >= simGridStats_.size())
+	{
+		throw std::runtime_error("Критическая ошибка: Неверный ID в вызове getSimCellStatus!\n");
+	}
+	return simGridStats_.at(id);
+}

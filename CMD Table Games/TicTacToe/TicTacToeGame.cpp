@@ -148,7 +148,7 @@ void TicTacToe::setCell(CellStatus cs, int id) {
 	gameGridStats_.at(id) = cs;
 }
 
-TicTacToe::GameResult TicTacToe::checkGameResult() {
+TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 	int repeatsThreshold = std::clamp(gridSize_, 3, 5);
 
 	if (stepCount_ < repeatsThreshold * 2 - 1) return GameResult::notDefined;
@@ -163,13 +163,13 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		colRepeats = 0;
 		for (int col{}; col < gridSize_; ++col)
 		{
-			auto currentColCell = getCellStatus(cellId);
+			auto currentColCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (col + 1 == gridSize_) 
 			{
 				++cellId;
 				break;
 			}
-			auto nextColCell = getCellStatus(cellId + 1);
+			auto nextColCell = isSimulation ? bot.getSimCellStatus(cellId + 1) : getCellStatus(cellId + 1);
 			if (currentColCell == nextColCell &&
 				(currentColCell == CellStatus::cross || currentColCell == CellStatus::zero))
 			{
@@ -199,9 +199,9 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		cellId = col;
 		for (int row{}; row < gridSize_; ++row)
 		{
-			auto currentRowCell = getCellStatus(cellId);
+			auto currentRowCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (row + 1 == gridSize_) break;
-			auto nextRowCell = getCellStatus(cellId + gridSize_);
+			auto nextRowCell = isSimulation ? bot.getSimCellStatus(cellId + gridSize_) : getCellStatus(cellId + gridSize_);
 			if (currentRowCell == nextRowCell &&
 				(currentRowCell == CellStatus::cross || currentRowCell == CellStatus::zero))
 			{
@@ -242,9 +242,9 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		diagRepeats = 0;
 		while (cellId % gridSize_ != 0)
 		{
-			auto currentCell = getCellStatus(cellId);
+			auto currentCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (cellId + (gridSize_ - 1) >= gridSize_ * gridSize_) break;
-			auto nextCell = getCellStatus(cellId + (gridSize_ - 1));
+			auto nextCell = isSimulation ? bot.getSimCellStatus(cellId + (gridSize_ - 1)) : getCellStatus(cellId + (gridSize_ - 1));
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
@@ -283,9 +283,9 @@ TicTacToe::GameResult TicTacToe::checkGameResult() {
 		diagRepeats = 0;
 		do
 		{
-			auto currentCell = getCellStatus(cellId);
+			auto currentCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (cellId + (gridSize_ + 1) >= gridSize_ * gridSize_) break;
-			auto nextCell = getCellStatus(cellId + (gridSize_ + 1));
+			auto nextCell = isSimulation ? bot.getSimCellStatus(cellId + (gridSize_ + 1)) : getCellStatus(cellId + (gridSize_ + 1));
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
