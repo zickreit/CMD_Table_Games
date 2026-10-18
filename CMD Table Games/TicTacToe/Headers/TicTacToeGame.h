@@ -5,6 +5,8 @@
 #include "Common/Headers/ConsoleWindow.h"
 #include "TicTacToeModules.h"
 
+class Bot;
+
 class TicTacToe : public ConsoleWindow {
 	friend class GameUI;
 	friend class GridUI;
@@ -27,7 +29,7 @@ private:
 private:
 	GameUI gameUI{};
 	MouseInteraction mouseInter;
-	Bot bot;
+	Bot* bot;
 private:
 	std::vector<CellStatus> gameGridStats_;
 	std::vector<SMALL_RECT> gameGridCoords_;
@@ -54,6 +56,7 @@ private:
 	int roundCount_{};
 public:
 	TicTacToe(int gameGridSize = 3);
+	~TicTacToe();
 
 	void startRound();
 

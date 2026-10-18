@@ -3,8 +3,8 @@
 #include <chrono>
 #include <vector>
 #include <stdexcept>
-#include "Headers/TicTacToeModules.h"
-#include "Headers/TicTacToeGame.h"
+#include <algorithm>
+#include "Headers/TicTacToeBot.h"
 
 void Bot::makeMove(TicTacToe& game) {
 	if (game.gameResult_ != TicTacToe::GameResult::notDefined) return;
@@ -51,7 +51,7 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 	{
 		possibleCombsNum *= possibleCells;
 	}
-	std::vector<int> mainCellsScore(mainCellsNum - game.stepCount_);
+	std::vector<int> mainCellsScore(mainCellsNum, 0);
 	for (int cellId{}; cellId < mainCellsNum; ++cellId)
 	{
 		if (game.getCellStatus(cellId) == TicTacToe::CellStatus::cross ||
@@ -80,10 +80,12 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 						isCombFound = false;
 					}
 				}
+				if (isNeedBreak) break;
 				for (int tempStep = 1; tempStep <= forwardMovesNumReal && isCombFound; ++tempStep)
 				{
-					while (game.getCellStatus(combCellsId[tempStep]) == TicTacToe::CellStatus::cross ||
-							game.getCellStatus(combCellsId[tempStep]) == TicTacToe::CellStatus::zero)
+					while (combCellsId[tempStep] < mainCellsNum - 1 &&
+						(game.getCellStatus(combCellsId[tempStep]) == TicTacToe::CellStatus::cross ||
+						game.getCellStatus(combCellsId[tempStep]) == TicTacToe::CellStatus::zero))
 					{
 						++combCellsId[tempStep];
 						isCombFound = false;
@@ -107,15 +109,103 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 		}
 		if (isNeedBreak) break;
 
+		static std::random_device rd;
+		static std::mt19937 mt(rd());
+		std::uniform_int_distribution<int> distrib(0, game.gridSize_ * game.gridSize_ - 1);
+
 		for (auto& comb : combsScore)
 		{
 			for (int simCount{}; simCount < simNum; ++simCount)
 			{
+				bool isNeedContinue{};
+				simSteps_ = game.stepCount_;
+				simGridStats_ = game.gameGridStats_;
+				for (auto& simCell : comb.cellsId)
+				{
+					if (simSteps_ % 2 == 0)
+					{
+						simGridStats_[simCell] = TicTacToe::CellStatus::cross;
+					}
+					else
+					{
+						simGridStats_[simCell] = TicTacToe::CellStatus::zero;
+					}
+					++simSteps_;
+					auto gameResult = game.checkGameResult(true);
+					if (gameResult == TicTacToe::GameResult::win)
+					{
+						--comb.score;
+						isNeedContinue = true;
+						++comb.movesNum;
+						break;
+					}
+					else if (gameResult == TicTacToe::GameResult::lose)
+					{
+						++comb.score;
+						isNeedContinue = true;
+						++comb.movesNum;
+						break;
+					}
+					else if (gameResult == TicTacToe::GameResult::draw)
+					{
+						isNeedContinue = true;
+						++comb.movesNum;
+						break;
+					}
+				}
+				if (isNeedContinue) continue;
+				while (simSteps_ < mainCellsNum)
+				{
+					int randCellId = distrib(mt);
+					while (getSimCellStatus(randCellId) != TicTacToe::CellStatus::empty &&
+						   getSimCellStatus(randCellId) != TicTacToe::CellStatus::focus)
+					{
+						randCellId = distrib(mt);
+					}
+					if (simSteps_ % 2 == 0)
+					{
+						simGridStats_[randCellId] = TicTacToe::CellStatus::cross;
+					}
+					else
+					{
+						simGridStats_[randCellId] = TicTacToe::CellStatus::zero;
+					}
+					++simSteps_;
+					auto gameResult = game.checkGameResult(true);
+					if (gameResult == TicTacToe::GameResult::win)
+					{
+						--comb.score;
+						++comb.movesNum;
+						break;
+					}
+					else if (gameResult == TicTacToe::GameResult::lose)
+					{
+						++comb.score;
+						++comb.movesNum;
+						break;
+					}
+					else if (gameResult == TicTacToe::GameResult::draw)
+					{
+						++comb.movesNum;
+						break;
+					}
+				}
+			}
+		}
 
+		for (auto& comb : combsScore)
+		{
+			if (mainCellsScore[cellId] < comb.score)
+			{
+				mainCellsScore[cellId] = comb.score;
 			}
 		}
 	}
-	return 0;
+	
+	auto maxIt = std::ranges::max_element(mainCellsScore);
+	auto finalCell = std::distance(mainCellsScore.begin(), maxIt);
+
+	return finalCell;
 }
 
 TicTacToe::CellStatus Bot::getSimCellStatus(int id) {

@@ -28,6 +28,8 @@
 #include <vector>
 #include <random>
 #include "Headers/TicTacToeGame.h"
+#include "Headers/TicTacToeBot.h"
+#include "Headers/TicTacToeModules.h"
 #include "Common/Headers/ConsoleWindow.h"
 
 TicTacToe::TicTacToe(int gameGridSize)
@@ -44,7 +46,10 @@ TicTacToe::TicTacToe(int gameGridSize)
 		--gridSizeHeightMultiplier_;
 		gridSizeWidthMultiplier_ -= 2;
 	}
+	bot = new Bot();
 }
+
+TicTacToe::~TicTacToe() = default;
 
 void TicTacToe::startRound() {
 	for(;;)
@@ -60,7 +65,7 @@ void TicTacToe::startRound() {
 			}
 			else if (gameResult_ == GameResult::lose)
 			{
-				if (bot.mode_ == Bot::Modes::off)
+				if (bot->mode_ == Bot::Modes::off)
 				{
 					++scoreSecondPlayer_;
 				}
@@ -107,9 +112,9 @@ void TicTacToe::startRound() {
 			}
 			else
 			{
-				if (bot.mode_ != Bot::Modes::off)
+				if (bot->mode_ != Bot::Modes::off)
 				{
-					bot.makeMove(*this);
+					bot->makeMove(*this);
 					gameResult_ = checkGameResult();
 					isPlayerTurn_ = true;
 				}
@@ -151,7 +156,9 @@ void TicTacToe::setCell(CellStatus cs, int id) {
 TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 	int repeatsThreshold = std::clamp(gridSize_, 3, 5);
 
-	if (stepCount_ < repeatsThreshold * 2 - 1) return GameResult::notDefined;
+	int stepCount = isSimulation ? bot->simSteps_ : stepCount_;
+
+	if (stepCount < repeatsThreshold * 2 - 1 && !isSimulation) return GameResult::notDefined;
 	if (gameResult_ == GameResult::win || gameResult_ == GameResult::lose) return gameResult_;
 
 	int cellId{};
@@ -163,18 +170,21 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 		colRepeats = 0;
 		for (int col{}; col < gridSize_; ++col)
 		{
-			auto currentColCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
+			auto currentColCell = isSimulation ? bot->getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (col + 1 == gridSize_) 
 			{
 				++cellId;
 				break;
 			}
-			auto nextColCell = isSimulation ? bot.getSimCellStatus(cellId + 1) : getCellStatus(cellId + 1);
+			auto nextColCell = isSimulation ? bot->getSimCellStatus(cellId + 1) : getCellStatus(cellId + 1);
 			if (currentColCell == nextColCell &&
 				(currentColCell == CellStatus::cross || currentColCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId + 1);
-				if (colRepeats == 0) winningCellsIds.push_back(cellId);
+				if (!isSimulation)
+				{
+					winningCellsIds.push_back(cellId + 1);
+					if (colRepeats == 0) winningCellsIds.push_back(cellId);
+				}
 				colRepeats += colRepeats == 0 ? 2 : 1;
 			}
 			else 
@@ -185,7 +195,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 
 			if (colRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
+				return isPlayerFirst_ && stepCount % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			++cellId;
 		}
@@ -199,14 +209,17 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 		cellId = col;
 		for (int row{}; row < gridSize_; ++row)
 		{
-			auto currentRowCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
+			auto currentRowCell = isSimulation ? bot->getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (row + 1 == gridSize_) break;
-			auto nextRowCell = isSimulation ? bot.getSimCellStatus(cellId + gridSize_) : getCellStatus(cellId + gridSize_);
+			auto nextRowCell = isSimulation ? bot->getSimCellStatus(cellId + gridSize_) : getCellStatus(cellId + gridSize_);
 			if (currentRowCell == nextRowCell &&
 				(currentRowCell == CellStatus::cross || currentRowCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId + gridSize_);
-				if (rowRepeats == 0) winningCellsIds.push_back(cellId);
+				if(!isSimulation)
+				{
+					winningCellsIds.push_back(cellId + gridSize_);
+					if (rowRepeats == 0) winningCellsIds.push_back(cellId);
+				}
 				rowRepeats += rowRepeats == 0 ? 2 : 1;
 			}
 			else 
@@ -217,7 +230,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 
 			if (rowRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
+				return isPlayerFirst_ && stepCount % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			cellId += gridSize_;
 		}
@@ -242,14 +255,17 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 		diagRepeats = 0;
 		while (cellId % gridSize_ != 0)
 		{
-			auto currentCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
+			auto currentCell = isSimulation ? bot->getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (cellId + (gridSize_ - 1) >= gridSize_ * gridSize_) break;
-			auto nextCell = isSimulation ? bot.getSimCellStatus(cellId + (gridSize_ - 1)) : getCellStatus(cellId + (gridSize_ - 1));
+			auto nextCell = isSimulation ? bot->getSimCellStatus(cellId + (gridSize_ - 1)) : getCellStatus(cellId + (gridSize_ - 1));
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId + (gridSize_ - 1));
-				if(diagRepeats == 0) winningCellsIds.push_back(cellId);
+				if (!isSimulation)
+				{
+					winningCellsIds.push_back(cellId + (gridSize_ - 1));
+					if (diagRepeats == 0) winningCellsIds.push_back(cellId);
+				}
 				diagRepeats += diagRepeats == 0 ? 2 : 1;
 			}
 			else
@@ -260,7 +276,7 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 
 			if (diagRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
+				return isPlayerFirst_ && stepCount % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			cellId += gridSize_ - 1;
 		}
@@ -283,14 +299,17 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 		diagRepeats = 0;
 		do
 		{
-			auto currentCell = isSimulation ? bot.getSimCellStatus(cellId) : getCellStatus(cellId);
+			auto currentCell = isSimulation ? bot->getSimCellStatus(cellId) : getCellStatus(cellId);
 			if (cellId + (gridSize_ + 1) >= gridSize_ * gridSize_) break;
-			auto nextCell = isSimulation ? bot.getSimCellStatus(cellId + (gridSize_ + 1)) : getCellStatus(cellId + (gridSize_ + 1));
+			auto nextCell = isSimulation ? bot->getSimCellStatus(cellId + (gridSize_ + 1)) : getCellStatus(cellId + (gridSize_ + 1));
 			if (currentCell == nextCell &&
 				(currentCell == CellStatus::cross || currentCell == CellStatus::zero))
 			{
-				winningCellsIds.push_back(cellId + (gridSize_ + 1));
-				if (diagRepeats == 0) winningCellsIds.push_back(cellId);
+				if (!isSimulation)
+				{
+					winningCellsIds.push_back(cellId + (gridSize_ + 1));
+					if (diagRepeats == 0) winningCellsIds.push_back(cellId);
+				}
 				diagRepeats += diagRepeats == 0 ? 2 : 1;
 			}
 			else 
@@ -300,14 +319,14 @@ TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 
 			if (diagRepeats == repeatsThreshold)
 			{
-				return isPlayerFirst_ && stepCount_ % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount_ % 2 == 0 ? GameResult::win : GameResult::lose);
+				return isPlayerFirst_ && stepCount % 2 != 0 ? GameResult::win : (!isPlayerFirst_ && stepCount % 2 == 0 ? GameResult::win : GameResult::lose);
 			}
 			cellId += gridSize_ + 1;
 		} while (cellId % (gridSize_ - 1) != 0 || (cellId + gridSize_) < (gridSize_ * gridSize_));
 	}
 	winningCellsIds.clear();
 
-	if (stepCount_ == gridSize_ * gridSize_)
+	if (stepCount == gridSize_ * gridSize_)
 	{
 		return GameResult::draw;
 	}

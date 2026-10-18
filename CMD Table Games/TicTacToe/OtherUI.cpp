@@ -1,5 +1,5 @@
-#include "Headers/TicTacToeModules.h"
 #include "Headers/TicTacToeGame.h"
+#include "Headers/TicTacToeBot.h"
 
 OtherUI::OtherUI() {
 	buttons_.push_back(Button("Рестарт"));
@@ -33,10 +33,10 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 		if (buttons_.at(1).getSwitchState() == 1)
 		{
 			buttons_.at(6).setSwitchState(0);
-			buttons_.at(2).setButtonState(game.bot.getMode() == Bot::Modes::off ? Button::State::activated : Button::State::noInteraction);
-			buttons_.at(3).setButtonState(game.bot.getMode() == Bot::Modes::easy ? Button::State::activated : Button::State::noInteraction);
-			buttons_.at(4).setButtonState(game.bot.getMode() == Bot::Modes::medium ? Button::State::activated : Button::State::noInteraction);
-			buttons_.at(5).setButtonState(game.bot.getMode() == Bot::Modes::hard ? Button::State::activated : Button::State::noInteraction);
+			buttons_.at(2).setButtonState(game.bot->getMode() == Bot::Modes::off ? Button::State::activated : Button::State::noInteraction);
+			buttons_.at(3).setButtonState(game.bot->getMode() == Bot::Modes::easy ? Button::State::activated : Button::State::noInteraction);
+			buttons_.at(4).setButtonState(game.bot->getMode() == Bot::Modes::medium ? Button::State::activated : Button::State::noInteraction);
+			buttons_.at(5).setButtonState(game.bot->getMode() == Bot::Modes::hard ? Button::State::activated : Button::State::noInteraction);
 		}
 		else if (buttons_.at(1).getSwitchState() == 0)
 		{
@@ -46,28 +46,28 @@ void OtherUI::implementButtonAction(TicTacToe& game, int id) {
 	case 2:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
-		game.bot.setMode(Bot::Modes::off);
+		game.bot->setMode(Bot::Modes::off);
 		restartGameWithZeroing(game);
 		buttons_.at(2).setButtonState(Button::State::noInteraction);
 		break;
 	case 3:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
-		game.bot.setMode(Bot::Modes::easy);
+		game.bot->setMode(Bot::Modes::easy);
 		restartGameWithZeroing(game);
 		buttons_.at(3).setButtonState(Button::State::noInteraction);
 		break;
 	case 4:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
-		game.bot.setMode(Bot::Modes::medium);
+		game.bot->setMode(Bot::Modes::medium);
 		restartGameWithZeroing(game);
 		buttons_.at(4).setButtonState(Button::State::noInteraction);
 		break;
 	case 5:
 		if (buttons_.at(id).getState() != Button::State::pressed) break;
 		buttons_.at(1).setSwitchState(0);
-		game.bot.setMode(Bot::Modes::hard);
+		game.bot->setMode(Bot::Modes::hard);
 		restartGameWithZeroing(game);
 		buttons_.at(5).setButtonState(Button::State::noInteraction);
 		break;

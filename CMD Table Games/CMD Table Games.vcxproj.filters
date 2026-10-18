@@ -71,5 +71,8 @@
     <ClInclude Include="Common\Headers\MenuInteraction.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="TicTacToe\Headers\TicTacToeBot.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

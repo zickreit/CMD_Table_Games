@@ -3,8 +3,8 @@
 #include <sstream>
 #include <algorithm>
 #include <ranges>
-#include "Headers/TicTacToeModules.h"
 #include "Headers/TicTacToeGame.h"
+#include "Headers/TicTacToeBot.h"
 #include "Common/Headers/Button.h"
 
 std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
@@ -76,14 +76,14 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 			}
 			else if (game.gameResult_ == TicTacToe::GameResult::lose)
 			{
-				std::cout << (game.bot.mode_ != Bot::Modes::off ? "Проигрыш" : "Победил игрок 2");
+				std::cout << (game.bot->mode_ != Bot::Modes::off ? "Проигрыш" : "Победил игрок 2");
 			}
 			else if (game.gameResult_ == TicTacToe::GameResult::win)
 			{
-				std::cout << (game.bot.mode_ != Bot::Modes::off ? "Победа" : "Победил игрок 1");
+				std::cout << (game.bot->mode_ != Bot::Modes::off ? "Победа" : "Победил игрок 1");
 			}
 			std::cout << "\033[K | Раунд: " << game.roundCount_;
-			if(game.bot.mode_ != Bot::Modes::off)
+			if(game.bot->mode_ != Bot::Modes::off)
 			{
 				std::cout << "\033[K";
 				int realPlayerScore = (game.gameResult_ == TicTacToe::GameResult::win ? game.scorePlayer_ + 1 : game.scorePlayer_);

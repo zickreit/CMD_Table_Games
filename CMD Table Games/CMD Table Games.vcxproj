@@ -161,6 +161,7 @@
     <ClInclude Include="Common\Headers\ConsoleWindow.h" />
     <ClInclude Include="Common\Headers\Menu.h" />
     <ClInclude Include="Common\Headers\MenuInteraction.h" />
+    <ClInclude Include="TicTacToe\Headers\TicTacToeBot.h" />
     <ClInclude Include="TicTacToe\Headers\TicTacToeGame.h" />
     <ClInclude Include="TicTacToe\Headers\TicTacToeModules.h" />
   </ItemGroup>

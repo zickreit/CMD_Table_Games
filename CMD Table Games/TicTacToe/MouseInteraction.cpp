@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include "Headers/TicTacToeGame.h"
-#include "Headers/TicTacToeModules.h"
 #include "Common/Headers/Button.h"
 
 bool MouseInteraction::mouseEventWaiting(TicTacToe& game, std::vector<Button>& buttons) {
