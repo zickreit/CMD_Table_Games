@@ -32,7 +32,7 @@ public:
 	void makeMove(TicTacToe& game);
 	int getCellIdEasyMode(TicTacToe& game);
 	int getCellIdMediumMode(TicTacToe& game);
-	int getCellIdHardMode(TicTacToe& game);
+	int getCellIdHardMode(TicTacToe& game, int simNum = 5, int forwardMovesNum = 2);
 	Modes getMode() { return mode_; }
 	void setMode(Modes mode) { mode_ = mode; }
 	TicTacToe::CellStatus getSimCellStatus(int id);

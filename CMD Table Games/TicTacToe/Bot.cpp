@@ -9,7 +9,20 @@
 void Bot::makeMove(TicTacToe& game) {
 	if (game.gameResult_ != TicTacToe::GameResult::notDefined) return;
 	auto cellStatus = game.stepCount_ % 2 == 0 ? TicTacToe::CellStatus::cross : TicTacToe::CellStatus::zero;
-	game.setCell(cellStatus, getCellIdHardMode(game));
+	int cellResult{};
+	switch (mode_)
+	{
+	case Modes::easy:
+		cellResult = getCellIdEasyMode(game);
+		break;
+	case Modes::medium:
+		cellResult = getCellIdMediumMode(game);
+		break;
+	case Modes::hard:
+		cellResult = getCellIdHardMode(game);
+		break;
+	}
+	game.setCell(cellStatus, cellResult);
 	++game.stepCount_;
 	//std::this_thread::sleep_for(std::chrono::seconds(1));
 }
@@ -27,9 +40,9 @@ int Bot::getCellIdEasyMode(TicTacToe& game) {
 	return randomId;
 }
 int Bot::getCellIdMediumMode(TicTacToe& game) {
-	return 0;
+	return getCellIdHardMode(game, 1, 1);
 }
-int Bot::getCellIdHardMode(TicTacToe& game) {
+int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 	// Цель: найти самый безпроигрышный ход
 	// Задачи:
 	//	- сделать главное хранилище счёта каждой клетки
@@ -40,8 +53,9 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 	//	 * находим комбинацию с большим счётом
 	//	 * итоговый счёт отдаём клетке родителю
 	//	- находим клетку с большим счётом и выводим её
-	int simNum				= 10;
-	int forwardMovesNum		= 2;
+	// 
+	//int simNum				= 1;
+	//int forwardMovesNum		= 1;
 
 	int mainCellsNum		= game.gridSize_ * game.gridSize_;
 	int completedMoves		= game.stepCount_;
