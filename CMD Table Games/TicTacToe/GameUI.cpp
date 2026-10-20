@@ -119,6 +119,7 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 				std::cout << otherUI.buttons_.at(4).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << " | ";
 				GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
 				std::cout << otherUI.buttons_.at(5).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y);
+				std::cout << "\033[K";
 			}
 			else if (otherUI.buttons_.at(6).getSwitchState() == 1)
 			{
@@ -131,6 +132,7 @@ std::vector<Button>& GameUI::drawUI(TicTacToe& game) {
 				std::cout << otherUI.buttons_.at(9).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y) << " | ";
 				GetConsoleScreenBufferInfo(game.getHandleOutput(), &csbi);
 				std::cout << otherUI.buttons_.at(10).drawButton(csbi.dwCursorPosition.X, csbi.dwCursorPosition.Y);
+				std::cout << "\033[K";
 				std::cout << "\n\r\033[K";
 			}
 			else

@@ -56,7 +56,7 @@ int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 	// 
 	//int simNum				= 1;
 	//int forwardMovesNum		= 1;
-
+	int optimizedGridSize	= (std::min)(game.gridSize_, 5);
 	int mainCellsNum		= game.gridSize_ * game.gridSize_;
 	int completedMoves		= game.stepCount_;
 	int forwardMovesNumReal	= (std::min)(forwardMovesNum, mainCellsNum - completedMoves - 1);
@@ -129,7 +129,7 @@ int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 
 		static std::random_device rd;
 		static std::mt19937 mt(rd());
-		std::uniform_int_distribution<int> distrib(0, game.gridSize_ * game.gridSize_ - 1);
+		std::uniform_int_distribution<int> distrib(0, mainCellsNum - 1);
 
 		for (auto& comb : combsScore)
 		{
@@ -213,10 +213,7 @@ int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 
 		for (auto& comb : combsScore)
 		{
-			//if (mainCellsScore[cellId] < comb.score)
-			{
-				mainCellsScore[cellId] += comb.score;
-			}
+			mainCellsScore[cellId] += comb.score;
 		}
 	}
 	
