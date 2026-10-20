@@ -40,7 +40,7 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 	//	 * находим комбинацию с большим счётом
 	//	 * итоговый счёт отдаём клетке родителю
 	//	- находим клетку с большим счётом и выводим её
-	int simNum				= 200;
+	int simNum				= 10;
 	int forwardMovesNum		= 2;
 
 	int mainCellsNum		= game.gridSize_ * game.gridSize_;

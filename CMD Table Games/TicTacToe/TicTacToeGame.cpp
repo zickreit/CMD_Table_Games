@@ -155,6 +155,7 @@ void TicTacToe::setCell(CellStatus cs, int id) {
 
 TicTacToe::GameResult TicTacToe::checkGameResult(bool isSimulation) {
 	int repeatsThreshold = std::clamp(gridSize_, 3, 5);
+	if(gridSize_ == 5) repeatsThreshold = 4;
 
 	int stepCount = isSimulation ? bot->simSteps_ : stepCount_;
 
