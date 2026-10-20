@@ -41,7 +41,7 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 	//	 * итоговый счёт отдаём клетке родителю
 	//	- находим клетку с большим счётом и выводим её
 	int simNum				= 200;
-	int forwardMovesNum		= 3;
+	int forwardMovesNum		= 2;
 
 	int mainCellsNum		= game.gridSize_ * game.gridSize_;
 	int completedMoves		= game.stepCount_;
@@ -51,11 +51,15 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 	{
 		possibleCombsNum *= possibleCells;
 	}
-	std::vector<int> mainCellsScore(mainCellsNum, 0);
+	std::vector<long long> mainCellsScore(mainCellsNum, 0);
 	for (int cellId{}; cellId < mainCellsNum; ++cellId)
 	{
 		if (game.getCellStatus(cellId) == TicTacToe::CellStatus::cross ||
-			game.getCellStatus(cellId) == TicTacToe::CellStatus::zero) continue;
+			game.getCellStatus(cellId) == TicTacToe::CellStatus::zero)
+		{
+			mainCellsScore[cellId] =(std::numeric_limits<long long>::min)();
+			continue;
+		}
 		std::vector<CombinationInfo> combsScore(possibleCombsNum);
 		std::vector<int> combCellsId(forwardMovesNumReal + 1);
 		combCellsId[0] = cellId;
@@ -195,9 +199,9 @@ int Bot::getCellIdHardMode(TicTacToe& game) {
 
 		for (auto& comb : combsScore)
 		{
-			if (mainCellsScore[cellId] < comb.score)
+			//if (mainCellsScore[cellId] < comb.score)
 			{
-				mainCellsScore[cellId] = comb.score;
+				mainCellsScore[cellId] += comb.score;
 			}
 		}
 	}
