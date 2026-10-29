@@ -2,8 +2,10 @@
 #include <thread>
 #include <chrono>
 #include <vector>
+#include <array>
 #include <stdexcept>
 #include <algorithm>
+#include <math.h>
 #include "Headers/TicTacToeBot.h"
 
 void Bot::makeMove(TicTacToe& game) {
@@ -54,28 +56,83 @@ int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 	//	 * итоговый счёт отдаём клетке родителю
 	//	- находим клетку с большим счётом и выводим её
 	// 
-	//int simNum				= 1;
-	//int forwardMovesNum		= 1;
-	int optimizedGridSize	= (std::min)(game.gridSize_, 5);
-	int mainCellsNum		= game.gridSize_ * game.gridSize_;
-	int completedMoves		= game.stepCount_;
-	int forwardMovesNumReal	= (std::min)(forwardMovesNum, mainCellsNum - completedMoves - 1);
-	int possibleCombsNum	= 1;
-	for (int possibleCells = mainCellsNum - completedMoves - 1; possibleCells > mainCellsNum - completedMoves  - 1 - forwardMovesNumReal; --possibleCells)
+	static std::random_device rd;
+	static std::mt19937 mt(rd());
+
+	std::array<int, 2> optimizedGridSize	= {5, 5};
+	int completedMoves						= game.stepCount_;
+	int possibleCombsNum					= 1;
+
+	int offsetX{};
+	int offsetY{};
+	if (game.gridSize_ > optimizedGridSize[0] && completedMoves == 0)
+	{
+		std::uniform_int_distribution<int> distrib(0, game.gridSize_ - optimizedGridSize[0] - 1);
+		offsetX = distrib(mt);
+		offsetY = distrib(mt);
+	}
+	else if (game.gridSize_ > optimizedGridSize[0])
+	{
+		for (int cellId{}; cellId < game.gridSize_ * game.gridSize_; ++cellId)
+		{
+			if (game.getCellStatus(cellId) == TicTacToe::CellStatus::cross || 
+				game.getCellStatus(cellId) == TicTacToe::CellStatus::zero)
+			{
+				offsetX = offsetX == 0 ? cellId % game.gridSize_ : (std::min)(offsetX, cellId % game.gridSize_);
+				offsetY = offsetY == 0 ? cellId / game.gridSize_ : (std::min)(offsetY, cellId / game.gridSize_);
+				optimizedGridSize[0] = (std::max)(optimizedGridSize[0], cellId % game.gridSize_);
+				optimizedGridSize[1] = (std::max)(optimizedGridSize[1], cellId / game.gridSize_);
+			}
+		}
+		int minSizeX = 5;
+		int minSizeY = 5;
+		int currentSizeX = std::fabs(optimizedGridSize[0] - offsetX);
+		int currentSizeY = std::fabs(optimizedGridSize[1] - offsetY);
+		if (currentSizeX < minSizeX || currentSizeY < minSizeY)
+		{
+			minSizeX -= currentSizeX;
+			minSizeY -= currentSizeY;
+			optimizedGridSize[0] -= minSizeX / 2;
+			minSizeX /= 2;
+			optimizedGridSize[1] -= minSizeY / 2;
+			minSizeY /= 2;
+			offsetX -= minSizeX;
+			offsetY -= minSizeY;
+		}
+		else
+		{
+			optimizedGridSize[0] -= offsetX;
+			optimizedGridSize[1] -= offsetY;
+		}
+	}
+	else
+	{
+		optimizedGridSize[0] = game.gridSize_;
+		optimizedGridSize[1] = game.gridSize_;
+	}
+
+	int mainCellsNum = optimizedGridSize[0] * optimizedGridSize[1];
+	int forwardMovesNumReal = (std::min)(forwardMovesNum, mainCellsNum - completedMoves - 1);
+	for (int possibleCells = mainCellsNum - completedMoves - 1; possibleCells > mainCellsNum - completedMoves - 1 - forwardMovesNumReal; --possibleCells)
 	{
 		possibleCombsNum *= possibleCells;
 	}
+
 	std::vector<long long> mainCellsScore(mainCellsNum, 0);
 	for (int cellId{}; cellId < mainCellsNum; ++cellId)
 	{
-		if (game.getCellStatus(cellId) == TicTacToe::CellStatus::cross ||
+		if (cellId % game.gridSize_ > optimizedGridSize[0] + offsetX	||
+			cellId / game.gridSize_ > optimizedGridSize[1] + offsetY	||
+			cellId % game.gridSize_ < offsetX							|| 
+			cellId % game.gridSize_ < offsetY							||
+			game.getCellStatus(cellId) == TicTacToe::CellStatus::cross	||
 			game.getCellStatus(cellId) == TicTacToe::CellStatus::zero)
 		{
-			mainCellsScore[cellId] =(std::numeric_limits<long long>::min)();
+			mainCellsScore[cellId] = (std::numeric_limits<long long>::min)();
 			continue;
 		}
 		std::vector<CombinationInfo> combsScore(possibleCombsNum);
-		std::vector<int> combCellsId(forwardMovesNumReal + 1);
+		std::vector<int> combCellsId(forwardMovesNumReal + 1, game.gridSize_ * offsetY + offsetX);
 		combCellsId[0] = cellId;
 		bool isNeedBreak{};
 		for (auto& comb : combsScore)
@@ -84,14 +141,16 @@ int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 			while (!isCombFound)
 			{
 				isCombFound = true;
-				for (int tempStep = forwardMovesNumReal; tempStep > 1; --tempStep)
+				for (int tempStep = forwardMovesNumReal; tempStep >= 1; --tempStep)
 				{
-					while (combCellsId[tempStep] >= mainCellsNum)
+					while (combCellsId[tempStep] % game.gridSize_ >= optimizedGridSize[0] + offsetX ||
+						   combCellsId[tempStep] / game.gridSize_ >= optimizedGridSize[1] + offsetY ||
+						   combCellsId[tempStep] >= game.gridSize_ * game.gridSize_)
 					{
-						combCellsId[tempStep] = 0;
+						combCellsId[tempStep] = game.gridSize_ * offsetY + offsetX;
 						if (tempStep - 1 == 0)
 						{
-							isNeedBreak = true;
+							//isNeedBreak = true;
 							break;
 						}
 						++combCellsId[tempStep - 1];
@@ -127,9 +186,16 @@ int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 		}
 		if (isNeedBreak) break;
 
-		static std::random_device rd;
-		static std::mt19937 mt(rd());
-		std::uniform_int_distribution<int> distrib(0, mainCellsNum - 1);
+		int mainOffset = game.gridSize_ * offsetY + offsetX;
+		int maxCellY = (optimizedGridSize[1] + offsetY - 1) * game.gridSize_;
+		int maxCellX = (optimizedGridSize[0] + offsetX - 1);
+		while (maxCellX >= game.gridSize_)
+		{
+			maxCellY += game.gridSize_;
+			maxCellX = optimizedGridSize[0];
+		}
+		int maxCellNum = maxCellY + maxCellX;
+		std::uniform_int_distribution<int> distrib(mainOffset, maxCellNum);
 
 		for (auto& comb : combsScore)
 		{
@@ -175,11 +241,21 @@ int Bot::getCellIdHardMode(TicTacToe& game, int simNum, int forwardMovesNum) {
 				while (simSteps_ < mainCellsNum)
 				{
 					int randCellId = distrib(mt);
+					int maxRandRepeats = mainCellsNum * 2;
+					int repeatsCount{};
+					bool isNoMoves{};
 					while (getSimCellStatus(randCellId) != TicTacToe::CellStatus::empty &&
 						   getSimCellStatus(randCellId) != TicTacToe::CellStatus::focus)
 					{
 						randCellId = distrib(mt);
+						++repeatsCount;
+						if (repeatsCount >= maxRandRepeats)
+						{
+							isNoMoves = true;
+							break;
+						}
 					}
+					if (isNoMoves) break;
 					if (simSteps_ % 2 == 0)
 					{
 						simGridStats_[randCellId] = TicTacToe::CellStatus::cross;
